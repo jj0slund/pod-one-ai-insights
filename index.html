@@ -1061,7 +1061,7 @@
           <ul class="checklist">
             <li><span class="check-icon" style="color:var(--adobe-red)">●</span> Manually pulling data from App Store Connect, Google Play Console, AppTweak</li>
             <li><span class="check-icon" style="color:var(--adobe-red)">●</span> Manually building FTD bar charts and YTD comparison tables</li>
-            <li><span class="check-icon" style="color:var(--adobe-red)">●</span> Manually inserting keyword rankings, experiment results, and event data</li>
+            <li><span class="check-icon" style="color:var(--adobe-red)">●</span> Pulling data from Looker (which pulls from BigQuery) instead of going to BigQuery directly</li>
             <li><span class="check-icon" style="color:var(--adobe-red)">●</span> Manually taking app store screenshots and placing them on slides</li>
             <li><span class="check-icon" style="color:var(--adobe-red)">●</span> Writing strategic commentary, learnings, and next steps</li>
             <li><span class="check-icon" style="color:var(--adobe-red)">●</span> Estimated <strong>6-10+ hours per cycle</strong> across the team</li>
@@ -1077,7 +1077,7 @@
             <li><span class="check-icon" style="color:var(--accent-green)">●</span> AI drafts initial narrative, analysis, and commentary</li>
             <li><span class="check-icon" style="color:var(--accent-green)">●</span> Consultant reviews, edits, and approves (human-in-the-loop)</li>
             <li><span class="check-icon" style="color:var(--accent-green)">●</span> Final PPTX generated and ready to send to Adobe</li>
-            <li><span class="check-icon" style="color:var(--accent-green)">●</span> Estimated <strong>30-60 minutes per cycle</strong> (review only)</li>
+            <li><span class="check-icon" style="color:var(--accent-green)">●</span> Estimated <strong>60-90 minutes per cycle</strong> (review, industry updates, QA)</li>
           </ul>
           <p style="font-size:14px;margin-top:12px"><strong style="color:var(--accent-green)">That's a 90% reduction in manual effort.</strong></p>
         </div>
@@ -1288,32 +1288,60 @@
               <td><span class="feasibility-badge feas-auto">Auto</span></td>
               <td style="color:var(--accent-green)">Day 1</td>
             </tr>
-            <tr><td colspan="6" style="font-weight:700;color:var(--accent-purple);background:rgba(139,92,246,0.06);text-transform:uppercase;font-size:11px;letter-spacing:1px">Experiments</td></tr>
+            <tr><td colspan="6" style="font-weight:700;color:var(--accent-purple);background:rgba(139,92,246,0.06);text-transform:uppercase;font-size:11px;letter-spacing:1px">Experiments (Conversion Slides)</td></tr>
             <tr>
               <td style="font-weight:500;color:var(--text-primary)">Experiment name, status, duration</td>
               <td>Tracking</td><td>Both</td>
-              <td>PressPlay / BigQuery</td>
+              <td>BigQuery (experiment setup)</td>
+              <td><span class="feasibility-badge feas-auto">Auto</span></td>
+              <td style="color:var(--accent-yellow)">Stretch</td>
+            </tr>
+            <tr>
+              <td style="font-weight:500;color:var(--text-primary)">Hypothesis</td>
+              <td>Context</td><td>Both</td>
+              <td>BigQuery (from Asana briefs)</td>
               <td><span class="feasibility-badge feas-auto">Auto</span></td>
               <td style="color:var(--accent-yellow)">Stretch</td>
             </tr>
             <tr>
               <td style="font-weight:500;color:var(--text-primary)">Audience segmentation (Personal/Prof/Student)</td>
               <td>Config</td><td>Scan, Reader</td>
-              <td>PressPlay / BigQuery</td>
+              <td>BigQuery (experiment setup)</td>
               <td><span class="feasibility-badge feas-auto">Auto</span></td>
               <td style="color:var(--accent-yellow)">Stretch</td>
             </tr>
             <tr>
               <td style="font-weight:500;color:var(--text-primary)">Statistical significance % &amp; uplift %</td>
               <td>Results</td><td>Both</td>
-              <td>PressPlay / calculated</td>
+              <td>BigQuery (uplift calculations)</td>
               <td><span class="feasibility-badge feas-auto">Auto</span></td>
+              <td style="color:var(--accent-yellow)">Stretch</td>
+            </tr>
+            <tr>
+              <td style="font-weight:500;color:var(--text-primary)">Sequential analysis results</td>
+              <td>Results</td><td>Both</td>
+              <td>BigQuery (sequential test data)</td>
+              <td><span class="feasibility-badge feas-auto">Auto</span></td>
+              <td style="color:var(--accent-yellow)">Stretch</td>
+            </tr>
+            <tr>
+              <td style="font-weight:500;color:var(--text-primary)">CPP testing results</td>
+              <td>Results</td><td>Both</td>
+              <td>BigQuery (analyzed + converted)</td>
+              <td><span class="feasibility-badge feas-semi">Semi-Auto</span></td>
+              <td style="color:var(--text-muted)">Phase 2</td>
+            </tr>
+            <tr>
+              <td style="font-weight:500;color:var(--text-primary)">Experiment learnings summary</td>
+              <td>Narrative</td><td>Both</td>
+              <td>AI draft from BigQuery data + human review</td>
+              <td><span class="feasibility-badge feas-semi">AI + Review</span></td>
               <td style="color:var(--accent-yellow)">Stretch</td>
             </tr>
             <tr>
               <td style="font-weight:500;color:var(--text-primary)">Screenshot variants (V1/V2/V3 images)</td>
               <td>Creative</td><td>Scan, Reader</td>
-              <td>Manual upload to asset library</td>
+              <td>Console screenshots / manual upload</td>
               <td><span class="feasibility-badge feas-manual">Upload</span></td>
               <td style="color:var(--text-muted)">Phase 2</td>
             </tr>
@@ -1338,13 +1366,6 @@
               <td>AI analysis of period data</td>
               <td><span class="feasibility-badge feas-semi">AI + Review</span></td>
               <td style="color:var(--accent-yellow)">Stretch</td>
-            </tr>
-            <tr>
-              <td style="font-weight:500;color:var(--text-primary)">Experiment hypothesis commentary</td>
-              <td>Strategy</td><td>Scan, Reader</td>
-              <td>AI draft from experiment context</td>
-              <td><span class="feasibility-badge feas-semi">AI + Review</span></td>
-              <td style="color:var(--text-muted)">Phase 2</td>
             </tr>
             <tr><td colspan="6" style="font-weight:700;color:var(--adobe-red);background:rgba(232,53,45,0.06);text-transform:uppercase;font-size:11px;letter-spacing:1px">Static / Config &amp; Manual</td></tr>
             <tr>
@@ -1388,7 +1409,7 @@
 
       <div class="stats-row" style="margin-top:24px">
         <div class="stat-card">
-          <div class="stat-value" style="color:var(--accent-green)">19</div>
+          <div class="stat-value" style="color:var(--accent-green)">21</div>
           <div class="stat-label">Fully Auto</div>
         </div>
         <div class="stat-card">
@@ -1396,7 +1417,7 @@
           <div class="stat-label">AI + Human Review</div>
         </div>
         <div class="stat-card">
-          <div class="stat-value" style="color:var(--accent-yellow)">4</div>
+          <div class="stat-value" style="color:var(--accent-yellow)">5</div>
           <div class="stat-label">Semi-Auto</div>
         </div>
         <div class="stat-card">
@@ -1404,7 +1425,7 @@
           <div class="stat-label">Manual / Upload</div>
         </div>
       </div>
-      <p style="margin-top:16px">Performance metrics, FTD data, rankings, CVR calculations, and campaign status tables are fully automatable from existing APIs and spreadsheets. Key learnings, insights, and recommendations get AI-generated first drafts with human review. Only industry news and screenshots still need fully manual input.</p>
+      <p style="margin-top:16px">Performance metrics, FTD data, rankings, CVR calculations, and experiment data (hypothesis, uplift, sequential analysis) are fully automatable from BigQuery. Keyword ranking slides pull directly from BigQuery rather than through Looker. Key learnings and recommendations get AI-generated first drafts with human review. CPP testing results need pre-processing before storage. Industry news, screenshots, and QA review still require manual effort.</p>
     </div>
 
     <!-- Hardest to Automate -->
@@ -1431,6 +1452,16 @@
           <h3>Campaign Planning Tables</h3>
           <p style="font-size:13px;margin-bottom:8px">Current: manually maintained in slides with ASA/GAC campaign concepts, markets, and status.</p>
           <p style="font-size:13px;color:var(--phiture-teal)"><strong>Solution:</strong> If structured in Asana/Notion, pull via API. Otherwise, maintain as a structured spreadsheet/BQ table that feeds into the deck.</p>
+        </div>
+        <div class="card">
+          <h3>CPP Testing Results</h3>
+          <p style="font-size:13px;margin-bottom:8px">Current: CPP results are analyzed and converted before going into slides. Works differently from standard A/B experiments and may not be directly pullable from Apple console.</p>
+          <p style="font-size:13px;color:var(--phiture-teal)"><strong>Solution:</strong> Store analyzed CPP results in BigQuery. Need to define the best input process -- whether via console API, manual entry form, or structured spreadsheet upload. Once in BQ, slides generate automatically.</p>
+        </div>
+        <div class="card">
+          <h3>Industry Updates &amp; Platform News</h3>
+          <p style="font-size:13px;margin-bottom:8px">Current: consultants manually research and write platform updates, industry trends, and app store policy changes. Requires staying on top of announcements.</p>
+          <p style="font-size:13px;color:var(--phiture-teal)"><strong>Solution:</strong> Remains manual for now. AI cannot reliably replace editorial judgment on what matters to Adobe. Long-term: RSS feed monitoring + AI summarization could provide a starting draft.</p>
         </div>
       </div>
     </div>
@@ -1537,7 +1568,7 @@
             <li><span class="check-icon" style="color:var(--accent-green)">●</span> Audit and document all BigQuery tables needed for decks</li>
             <li><span class="check-icon" style="color:var(--accent-green)">●</span> Build context layer (fiscal weeks, market tiers, metrics, products)</li>
             <li><span class="check-icon" style="color:var(--accent-green)">●</span> Auto-generate performance recap slides (FTD charts, YTD tables)</li>
-            <li><span class="check-icon" style="color:var(--accent-green)">●</span> Auto-generate keyword ranking slides from AppTweak data</li>
+            <li><span class="check-icon" style="color:var(--accent-green)">●</span> Auto-generate keyword ranking slides directly from BigQuery (AppTweak data)</li>
             <li><span class="check-icon" style="color:var(--accent-green)">●</span> Auto-generate IAE/PCE event results slides</li>
             <li><span class="check-icon" style="color:var(--accent-green)">●</span> AI-drafted narrative and commentary (Claude)</li>
             <li><span class="check-icon" style="color:var(--accent-green)">●</span> End-to-end pipeline: data → context → slides → PPTX output</li>
