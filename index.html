@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AI Insights Platform  - Adobe ASO | Phiture</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
@@ -658,9 +659,63 @@
     .timeline { flex-direction: column; gap: 16px; }
     .timeline::before { display: none; }
   }
+  /* Auth overlay */
+  #auth-overlay {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: var(--bg-primary);
+    z-index: 10000;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column;
+  }
+  #auth-overlay.hidden { display: none; }
+  .auth-box {
+    background: var(--bg-card);
+    border: 1px solid var(--border-light);
+    border-radius: 16px;
+    padding: 48px;
+    text-align: center;
+    max-width: 420px;
+    width: 90%;
+  }
+  .auth-box .diamond {
+    width: 56px; height: 56px; margin: 0 auto 20px;
+    background: linear-gradient(135deg, var(--phiture-teal), var(--adobe-red));
+    transform: rotate(45deg); border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .auth-box .diamond span { transform: rotate(-45deg); font-weight: 800; font-size: 24px; color: white; }
+  .auth-box h1 { font-size: 24px; font-weight: 700; margin-bottom: 8px; }
+  .auth-box p { font-size: 14px; color: var(--text-secondary); margin-bottom: 24px; }
+  .auth-box .auth-error {
+    color: var(--adobe-red); font-size: 13px; margin-top: 16px; display: none;
+  }
+  .auth-box .auth-error.visible { display: block; }
+  #g_id_signin { display: flex; justify-content: center; }
+  .auth-user-info {
+    display: none; align-items: center; gap: 10px; margin-top: 16px;
+    padding: 10px 16px; background: var(--bg-secondary); border-radius: 8px;
+    font-size: 13px;
+  }
+  .auth-user-info img { width: 28px; height: 28px; border-radius: 50%; }
+  .auth-signout {
+    margin-left: auto; color: var(--text-muted); cursor: pointer;
+    font-size: 11px; text-decoration: underline;
+  }
+  .auth-signout:hover { color: var(--text-primary); }
 </style>
 </head>
 <body>
+
+<!-- ========== AUTH OVERLAY ========== -->
+<div id="auth-overlay">
+  <div class="auth-box">
+    <div class="diamond"><span>P</span></div>
+    <h1>AI Insights Platform</h1>
+    <p>Sign in with your Phiture Google account to continue</p>
+    <div id="g_id_signin"></div>
+    <div id="auth-error" class="auth-error">Access restricted to @phiture.com accounts. Please sign in with your Phiture email.</div>
+  </div>
+</div>
 
 <!-- ========== NAVIGATION ========== -->
 <nav>
@@ -1538,251 +1593,19 @@
           <div class="step-desc">Claude drafts<br>summary &amp;<br>insights text</div>
         </div>
         <div class="workflow-arrow">-</div>
-        <div class="workflow-step">
-          <div class="step-num">6</div>
-          <div class="step-title">Human Review</div>
-          <div class="step-desc">Consultant edits<br>commentary via<br>web form</div>
+        <div class="workflow-step" style="border-color:var(--accent-green)">
+          <div class="step-num" style="color:var(--accent-green)">6</div>
+          <div class="step-title">.pptx Export</div>
+          <div class="step-desc">Versioned deck<br>generated and<br>saved to drive</div>
         </div>
         <div class="workflow-arrow">-</div>
-        <div class="workflow-step" style="border-color:var(--accent-green)">
-          <div class="step-num" style="color:var(--accent-green)">OUTPUT</div>
-          <div class="step-title">.pptx</div>
-          <div class="step-desc">Versioned deck<br>ready for Adobe</div>
+        <div class="workflow-step" style="border-color:var(--accent-yellow)">
+          <div class="step-num" style="color:var(--accent-yellow)">7</div>
+          <div class="step-title">Human Review</div>
+          <div class="step-desc">Consultant opens<br>exported PPTX,<br>edits directly</div>
         </div>
       </div>
-    </div>
-
-    <!-- ===== CONSULTANT REVIEW INTERFACE ===== -->
-    <div class="section">
-      <h4>Human-in-the-Loop</h4>
-      <h2>Consultant Review Interface</h2>
-      <p style="margin-bottom:20px">After the pipeline generates a draft deck, consultants review each slide in a web interface with an AI assistant. Chat with Claude to refine commentary, adjust data framing, or request changes - then export the final PPTX.</p>
-
-      <!-- Review Interface Mockup -->
-      <div style="border:1px solid var(--border);border-radius:16px;overflow:hidden;background:var(--bg-primary)">
-
-        <!-- Top toolbar -->
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 20px;background:var(--bg-secondary);border-bottom:1px solid var(--border)">
-          <div style="display:flex;align-items:center;gap:12px">
-            <div style="font-size:14px;font-weight:700;color:var(--text-primary)">Scan Bi-Weekly</div>
-            <div style="font-size:11px;color:var(--text-muted);padding:4px 10px;background:rgba(255,255,255,0.06);border-radius:4px">FY26 Q2 - Weeks 13-14</div>
-            <div style="font-size:11px;color:var(--accent-green);padding:4px 10px;background:rgba(34,197,94,0.1);border-radius:4px">AI Draft Ready</div>
-          </div>
-          <div style="display:flex;gap:8px">
-            <div style="padding:6px 14px;background:var(--bg-primary);border:1px solid var(--border);color:var(--text-secondary);border-radius:6px;font-size:12px;font-weight:600;cursor:pointer">Preview All</div>
-            <div style="padding:6px 14px;background:var(--phiture-teal);color:#fff;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer">Export PPTX</div>
-          </div>
-        </div>
-
-        <!-- Main content: slide panel + chat -->
-        <div style="display:grid;grid-template-columns:220px 1fr 340px;min-height:480px">
-
-          <!-- Left: Slide thumbnails -->
-          <div style="border-right:1px solid var(--border);padding:12px;overflow-y:auto;background:rgba(0,0,0,0.15)">
-            <div style="font-size:10px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;padding:0 4px">Slides (42)</div>
-
-            <div style="padding:6px;border-radius:6px;margin-bottom:6px;cursor:pointer;opacity:0.5">
-              <div style="background:var(--bg-secondary);border-radius:4px;padding:12px 8px;text-align:center;border:1px solid var(--border)">
-                <div style="font-size:9px;font-weight:700;color:var(--phiture-teal)">SLIDE 1</div>
-                <div style="font-size:10px;color:var(--text-muted);margin-top:2px">Title Slide</div>
-              </div>
-              <div style="display:flex;align-items:center;gap:4px;margin-top:4px;padding:0 2px">
-                <div style="width:6px;height:6px;border-radius:50%;background:var(--accent-green)"></div>
-                <span style="font-size:9px;color:var(--text-muted)">Auto - no review needed</span>
-              </div>
-            </div>
-
-            <div style="padding:6px;border-radius:6px;margin-bottom:6px;cursor:pointer;opacity:0.5">
-              <div style="background:var(--bg-secondary);border-radius:4px;padding:12px 8px;text-align:center;border:1px solid var(--border)">
-                <div style="font-size:9px;font-weight:700;color:var(--phiture-teal)">SLIDE 2-3</div>
-                <div style="font-size:10px;color:var(--text-muted);margin-top:2px">Locales + Glossary</div>
-              </div>
-              <div style="display:flex;align-items:center;gap:4px;margin-top:4px;padding:0 2px">
-                <div style="width:6px;height:6px;border-radius:50%;background:var(--accent-green)"></div>
-                <span style="font-size:9px;color:var(--text-muted)">Auto - config slides</span>
-              </div>
-            </div>
-
-            <div style="padding:6px;border-radius:6px;margin-bottom:6px;cursor:pointer;opacity:0.5">
-              <div style="background:var(--bg-secondary);border-radius:4px;padding:12px 8px;text-align:center;border:1px solid var(--border)">
-                <div style="font-size:9px;font-weight:700;color:var(--accent-blue)">SLIDE 4-5</div>
-                <div style="font-size:10px;color:var(--text-muted);margin-top:2px">Performance Recap</div>
-              </div>
-              <div style="display:flex;align-items:center;gap:4px;margin-top:4px;padding:0 2px">
-                <div style="width:6px;height:6px;border-radius:50%;background:var(--accent-green)"></div>
-                <span style="font-size:9px;color:var(--text-muted)">Auto - data + charts</span>
-              </div>
-            </div>
-
-            <div style="padding:6px;border-radius:8px;margin-bottom:6px;cursor:pointer;background:rgba(0,180,170,0.1);border:1px solid rgba(0,180,170,0.3)">
-              <div style="background:var(--bg-secondary);border-radius:4px;padding:12px 8px;text-align:center;border:1px solid var(--phiture-teal)">
-                <div style="font-size:9px;font-weight:700;color:var(--accent-purple)">SLIDE 6</div>
-                <div style="font-size:10px;color:var(--text-primary);font-weight:600;margin-top:2px">Key Learnings</div>
-              </div>
-              <div style="display:flex;align-items:center;gap:4px;margin-top:4px;padding:0 2px">
-                <div style="width:6px;height:6px;border-radius:50%;background:var(--accent-purple)"></div>
-                <span style="font-size:9px;color:var(--accent-purple);font-weight:600">AI Draft - needs review</span>
-              </div>
-            </div>
-
-            <div style="padding:6px;border-radius:6px;margin-bottom:6px;cursor:pointer;opacity:0.5">
-              <div style="background:var(--bg-secondary);border-radius:4px;padding:12px 8px;text-align:center;border:1px solid var(--border)">
-                <div style="font-size:9px;font-weight:700;color:var(--accent-yellow)">SLIDE 7-12</div>
-                <div style="font-size:10px;color:var(--text-muted);margin-top:2px">Keywords</div>
-              </div>
-              <div style="display:flex;align-items:center;gap:4px;margin-top:4px;padding:0 2px">
-                <div style="width:6px;height:6px;border-radius:50%;background:var(--accent-green)"></div>
-                <span style="font-size:9px;color:var(--text-muted)">Auto - AppTweak data</span>
-              </div>
-            </div>
-
-            <div style="padding:6px;border-radius:6px;margin-bottom:6px;cursor:pointer;opacity:0.5">
-              <div style="background:var(--bg-secondary);border-radius:4px;padding:12px 8px;text-align:center;border:1px solid var(--border)">
-                <div style="font-size:9px;font-weight:700;color:var(--accent-purple)">SLIDE 13</div>
-                <div style="font-size:10px;color:var(--text-muted);margin-top:2px">Next Steps</div>
-              </div>
-              <div style="display:flex;align-items:center;gap:4px;margin-top:4px;padding:0 2px">
-                <div style="width:6px;height:6px;border-radius:50%;background:var(--accent-purple)"></div>
-                <span style="font-size:9px;color:var(--text-muted)">AI Draft - needs review</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Center: Active slide preview -->
-          <div style="padding:24px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(0,0,0,0.08)">
-            <div style="width:100%;max-width:520px;background:white;border-radius:4px;padding:32px 28px;box-shadow:0 4px 24px rgba(0,0,0,0.3)">
-              <div style="font-size:8px;font-weight:700;color:#666;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Adobe Scan - Bi-Weekly Update</div>
-              <div style="font-size:16px;font-weight:800;color:#1a1a2e;margin-bottom:16px">Key Learnings &amp; Insights</div>
-              <div style="font-size:10px;color:#333;line-height:1.8">
-                <div style="display:flex;gap:8px;margin-bottom:8px;padding:6px 8px;background:rgba(139,92,246,0.08);border-radius:4px;border-left:3px solid #8B5CF6">
-                  <span style="font-weight:700;color:#8B5CF6;flex-shrink:0">1.</span>
-                  <span>Feature screenshot experiment showed <strong>8.2% uplift</strong> for "AI-powered" messaging variant across US and DE markets. Confidence level 96%.</span>
-                </div>
-                <div style="display:flex;gap:8px;margin-bottom:8px;padding:6px 8px;background:rgba(139,92,246,0.08);border-radius:4px;border-left:3px solid #8B5CF6">
-                  <span style="font-weight:700;color:#8B5CF6;flex-shrink:0">2.</span>
-                  <span>New Year IAE campaign drove <strong>436K impressions</strong> in JP market with 3.2% CVR - highest event performance this quarter.</span>
-                </div>
-                <div style="display:flex;gap:8px;margin-bottom:8px;padding:6px 8px;background:rgba(232,53,45,0.08);border-radius:4px;border-left:3px solid #E8352D">
-                  <span style="font-weight:700;color:#E8352D;flex-shrink:0">3.</span>
-                  <span>"scanner" keyword dropped from #1 to #3 in US - CamScanner gained positions with recent app update.</span>
-                </div>
-                <div style="display:flex;gap:8px;padding:6px 8px;background:rgba(59,130,246,0.08);border-radius:4px;border-left:3px solid #3B82F6">
-                  <span style="font-weight:700;color:#3B82F6;flex-shrink:0">4.</span>
-                  <span>Android SL CVR improved <strong>+2.1pp</strong> after Q1 store listing refresh - validating metadata optimization strategy.</span>
-                </div>
-              </div>
-              <div style="margin-top:12px;padding-top:8px;border-top:1px solid #eee;font-size:8px;color:#999;display:flex;justify-content:space-between">
-                <span>AI-generated draft - pending consultant review</span>
-                <span style="color:#8B5CF6;font-weight:600">Slide 6 of 42</span>
-              </div>
-            </div>
-            <div style="display:flex;align-items:center;gap:16px;margin-top:16px">
-              <div style="padding:6px 12px;background:var(--bg-secondary);border:1px solid var(--border);border-radius:6px;font-size:11px;color:var(--text-muted);cursor:pointer">&#8592; Prev</div>
-              <div style="font-size:11px;color:var(--text-muted)">Slide 6 of 42</div>
-              <div style="padding:6px 12px;background:var(--bg-secondary);border:1px solid var(--border);border-radius:6px;font-size:11px;color:var(--text-muted);cursor:pointer">Next &#8594;</div>
-            </div>
-          </div>
-
-          <!-- Right: Chat panel -->
-          <div style="border-left:1px solid var(--border);display:flex;flex-direction:column;background:rgba(0,0,0,0.1)">
-            <div style="padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px">
-              <div style="width:24px;height:24px;border-radius:6px;background:var(--phiture-teal);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:white">AI</div>
-              <div>
-                <div style="font-size:12px;font-weight:600;color:var(--text-primary)">Claude Assistant</div>
-                <div style="font-size:10px;color:var(--text-muted)">Has context for this slide's data</div>
-              </div>
-            </div>
-
-            <div style="flex:1;overflow-y:auto;padding:12px 16px;display:flex;flex-direction:column;gap:12px">
-              <!-- AI message -->
-              <div style="display:flex;gap:8px">
-                <div style="width:22px;height:22px;border-radius:5px;background:var(--phiture-teal);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:white;flex-shrink:0;margin-top:2px">AI</div>
-                <div style="background:var(--bg-secondary);border:1px solid var(--border);border-radius:10px;border-top-left-radius:2px;padding:10px 12px;font-size:12px;color:var(--text-secondary);line-height:1.6">
-                  I've drafted 4 key learnings based on the data from weeks 13-14. The main highlights are the screenshot experiment uplift, JP IAE performance, the US "scanner" keyword drop, and the Android CVR improvement. Want me to adjust any of these?
-                </div>
-              </div>
-
-              <!-- User message -->
-              <div style="display:flex;gap:8px;flex-direction:row-reverse">
-                <div style="width:22px;height:22px;border-radius:5px;background:var(--accent-blue);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:white;flex-shrink:0;margin-top:2px">O</div>
-                <div style="background:rgba(59,130,246,0.15);border:1px solid rgba(59,130,246,0.25);border-radius:10px;border-top-right-radius:2px;padding:10px 12px;font-size:12px;color:var(--text-primary);line-height:1.6">
-                  Point 3 about the keyword drop - can you add that we think it's related to CamScanner's new AI features launch? Also make it sound less alarming, we're already working on a response.
-                </div>
-              </div>
-
-              <!-- AI response -->
-              <div style="display:flex;gap:8px">
-                <div style="width:22px;height:22px;border-radius:5px;background:var(--phiture-teal);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:white;flex-shrink:0;margin-top:2px">AI</div>
-                <div style="background:var(--bg-secondary);border:1px solid var(--border);border-radius:10px;border-top-left-radius:2px;padding:10px 12px;font-size:12px;color:var(--text-secondary);line-height:1.6">
-                  Updated. I've reframed point 3 to note the CamScanner AI features launch as the likely cause and added that a metadata optimization response is already in progress for weeks 15-16. The slide preview on the left has been updated.
-                  <div style="margin-top:8px;padding:8px 10px;background:rgba(0,180,170,0.1);border-radius:6px;border:1px solid rgba(0,180,170,0.2);font-size:11px">
-                    <strong style="color:var(--phiture-teal)">Updated text:</strong><br>
-                    <span style="color:var(--text-primary)">"scanner" moved from #1 to #3 in US following CamScanner's AI features launch. Metadata optimization response planned for weeks 15-16.</span>
-                  </div>
-                </div>
-              </div>
-
-              <!-- User message -->
-              <div style="display:flex;gap:8px;flex-direction:row-reverse">
-                <div style="width:22px;height:22px;border-radius:5px;background:var(--accent-blue);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:white;flex-shrink:0;margin-top:2px">O</div>
-                <div style="background:rgba(59,130,246,0.15);border:1px solid rgba(59,130,246,0.25);border-radius:10px;border-top-right-radius:2px;padding:10px 12px;font-size:12px;color:var(--text-primary);line-height:1.6">
-                  Perfect. Approve this slide.
-                </div>
-              </div>
-
-              <!-- AI confirmation -->
-              <div style="display:flex;gap:8px">
-                <div style="width:22px;height:22px;border-radius:5px;background:var(--phiture-teal);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:white;flex-shrink:0;margin-top:2px">AI</div>
-                <div style="background:var(--bg-secondary);border:1px solid var(--border);border-radius:10px;border-top-left-radius:2px;padding:10px 12px;font-size:12px;color:var(--text-secondary);line-height:1.6">
-                  <span style="color:var(--accent-green)">&#10003; Slide 6 approved.</span> Moving to the next slide that needs review: <strong>Slide 13 - Next Steps &amp; Recommendations</strong>. All other slides are auto-generated and don't require review. Want to jump there?
-                </div>
-              </div>
-            </div>
-
-            <!-- Chat input -->
-            <div style="padding:12px 16px;border-top:1px solid var(--border)">
-              <div style="display:flex;gap:8px;align-items:center">
-                <div style="flex:1;padding:10px 14px;background:var(--bg-secondary);border:1px solid var(--border);border-radius:8px;font-size:12px;color:var(--text-muted)">Ask Claude to revise this slide...</div>
-                <div style="width:32px;height:32px;border-radius:8px;background:var(--phiture-teal);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;color:white;flex-shrink:0">&#8593;</div>
-              </div>
-              <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
-                <div style="padding:4px 10px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:12px;font-size:10px;color:var(--text-muted);cursor:pointer">Make more concise</div>
-                <div style="padding:4px 10px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:12px;font-size:10px;color:var(--text-muted);cursor:pointer">Add data point</div>
-                <div style="padding:4px 10px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:12px;font-size:10px;color:var(--text-muted);cursor:pointer">Change tone</div>
-                <div style="padding:4px 10px;background:rgba(34,197,94,0.15);border:1px solid rgba(34,197,94,0.3);border-radius:12px;font-size:10px;color:var(--accent-green);cursor:pointer;font-weight:600">&#10003; Approve slide</div>
-              </div>
-            </div>
-          </div>
-
-        </div>
-
-        <!-- Bottom status bar -->
-        <div style="padding:10px 20px;background:var(--bg-secondary);border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
-          <div style="display:flex;gap:16px;font-size:11px">
-            <span style="color:var(--accent-green)">&#9679; 38 slides auto-approved</span>
-            <span style="color:var(--accent-purple)">&#9679; 2 slides need review</span>
-            <span style="color:var(--accent-blue)">&#9679; 1 approved with edits</span>
-            <span style="color:var(--text-muted)">&#9679; 1 remaining</span>
-          </div>
-          <div style="font-size:11px;color:var(--text-muted)">Powered by Claude API</div>
-        </div>
-      </div>
-
-      <!-- How it works -->
-      <div class="card-grid card-grid-3" style="margin-top:24px">
-        <div class="card" style="border-top:3px solid var(--accent-green)">
-          <h3>Auto-Approved Slides</h3>
-          <p style="font-size:13px">Data-only slides (charts, tables, rankings) are auto-generated and pre-approved. The consultant can still review them but doesn't need to.</p>
-        </div>
-        <div class="card" style="border-top:3px solid var(--accent-purple)">
-          <h3>AI Draft Slides</h3>
-          <p style="font-size:13px">Narrative slides (learnings, next steps, summaries) get an AI first draft. The consultant reviews and uses Claude to iterate until the framing is right.</p>
-        </div>
-        <div class="card" style="border-top:3px solid var(--phiture-teal)">
-          <h3>Export When Ready</h3>
-          <p style="font-size:13px">Once all review slides are approved, export generates a branded PPTX matching the existing template. Version is logged with an audit trail.</p>
-        </div>
-      </div>
+      <p style="font-size:13px;color:var(--text-muted);margin-top:-16px;margin-bottom:16px"><strong>V1 approach:</strong> The AI generates a complete PPTX file. Consultants then open it in PowerPoint/Google Slides and edit commentary, add strategic notes, and polish before sharing with Adobe.</p>
     </div>
 
     <!-- ===== STEP BY STEP PROCESS ===== -->
@@ -1885,6 +1708,76 @@
             <li><span class="check-icon" style="color:var(--accent-yellow)">10</span> Basic data quality validation report</li>
           </ul>
         </div>
+      </div>
+    </div>
+
+    <!-- ===== NEXT STEPS AFTER HACKATHON ===== -->
+    <div class="section">
+      <h4>Looking Ahead</h4>
+      <h2>Next Steps After Hackathon</h2>
+      <p style="margin-bottom:24px">The hackathon delivers a working V1 pipeline. Here is what comes next to scale the system and improve the review workflow.</p>
+
+      <div class="card-grid card-grid-2" style="margin-bottom:32px">
+        <div class="card" style="border-top:3px solid var(--phiture-teal)">
+          <h3>Phase 2: Expand Report Coverage</h3>
+          <p style="font-size:12px;color:var(--phiture-teal);font-weight:600;margin-bottom:8px">WEEKS 2-4</p>
+          <ul class="checklist">
+            <li><span class="check-icon" style="color:var(--phiture-teal)">&#9679;</span> Adapt pipeline for Susan Bi-Weekly exec report</li>
+            <li><span class="check-icon" style="color:var(--phiture-teal)">&#9679;</span> Build Weekly Deep Dive template (more granular metrics)</li>
+            <li><span class="check-icon" style="color:var(--phiture-teal)">&#9679;</span> Add QBR (Quarterly Business Review) generation</li>
+            <li><span class="check-icon" style="color:var(--phiture-teal)">&#9679;</span> Integrate Sensor Tower data where available</li>
+            <li><span class="check-icon" style="color:var(--phiture-teal)">&#9679;</span> Add Playwright for automated app store screenshots</li>
+          </ul>
+        </div>
+        <div class="card" style="border-top:3px solid var(--accent-purple)">
+          <h3>Phase 3: Consultant Review Interface</h3>
+          <p style="font-size:12px;color:var(--accent-purple);font-weight:600;margin-bottom:8px">MONTH 2+</p>
+          <ul class="checklist">
+            <li><span class="check-icon" style="color:var(--accent-purple)">&#9679;</span> Web-based slide-by-slide review interface</li>
+            <li><span class="check-icon" style="color:var(--accent-purple)">&#9679;</span> Chat with Claude per slide to refine narrative</li>
+            <li><span class="check-icon" style="color:var(--accent-purple)">&#9679;</span> Approval workflow with status tracking per slide</li>
+            <li><span class="check-icon" style="color:var(--accent-purple)">&#9679;</span> One-click final export after review</li>
+            <li><span class="check-icon" style="color:var(--accent-purple)">&#9679;</span> Version history and diff view between drafts</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Consultant Review Interface Vision -->
+      <div class="card" style="border:1px solid var(--accent-purple);margin-bottom:24px">
+        <h3 style="color:var(--accent-purple);margin-bottom:4px">V2 Vision: Consultant Review Interface</h3>
+        <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px">Today (V1), consultants edit the exported PPTX directly in PowerPoint or Google Slides. In V2, they get a purpose-built review experience:</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:16px">
+          <div style="background:var(--bg-secondary);border-radius:8px;padding:16px;text-align:center">
+            <div style="font-size:28px;margin-bottom:8px">&#128196;</div>
+            <div style="font-size:13px;font-weight:600;margin-bottom:4px">Slide Navigator</div>
+            <div style="font-size:11px;color:var(--text-muted)">Thumbnail view of all slides with status badges (approved, needs edit, pending)</div>
+          </div>
+          <div style="background:var(--bg-secondary);border-radius:8px;padding:16px;text-align:center">
+            <div style="font-size:28px;margin-bottom:8px">&#128065;</div>
+            <div style="font-size:13px;font-weight:600;margin-bottom:4px">Slide Preview</div>
+            <div style="font-size:11px;color:var(--text-muted)">Full-size preview with inline editing for commentary and narrative sections</div>
+          </div>
+          <div style="background:var(--bg-secondary);border-radius:8px;padding:16px;text-align:center">
+            <div style="font-size:28px;margin-bottom:8px">&#129302;</div>
+            <div style="font-size:13px;font-weight:600;margin-bottom:4px">Claude Chat</div>
+            <div style="font-size:11px;color:var(--text-muted)">Ask Claude to rewrite, expand, or adjust the narrative for each slide</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap">
+          <span style="padding:4px 12px;background:rgba(162,89,255,0.1);color:var(--accent-purple);border-radius:12px;font-size:11px;font-weight:600">Quick actions: "Make more concise" / "Add YoY context" / "Flag for team"</span>
+          <span style="padding:4px 12px;background:rgba(162,89,255,0.1);color:var(--accent-purple);border-radius:12px;font-size:11px;font-weight:600">Bulk approve all data slides, focus review on narrative slides</span>
+        </div>
+      </div>
+
+      <div class="card" style="border-left:4px solid var(--accent-blue)">
+        <h3>Other Post-Hackathon Improvements</h3>
+        <ul class="checklist">
+          <li><span class="check-icon" style="color:var(--accent-blue)">&#9679;</span> <strong>Proactive alerts:</strong> Anomaly detection that flags drops or spikes before the bi-weekly cycle</li>
+          <li><span class="check-icon" style="color:var(--accent-blue)">&#9679;</span> <strong>Data quality monitoring:</strong> Automated checks for stale data, missing dates, or schema changes</li>
+          <li><span class="check-icon" style="color:var(--accent-blue)">&#9679;</span> <strong>Multi-product orchestration:</strong> Generate Scan + Reader decks in parallel with one command</li>
+          <li><span class="check-icon" style="color:var(--accent-blue)">&#9679;</span> <strong>Historical archive:</strong> Searchable archive of all generated decks with trend analysis across periods</li>
+          <li><span class="check-icon" style="color:var(--accent-blue)">&#9679;</span> <strong>Persona-based dashboards:</strong> Different views for Susan (exec), Growth Lead (JJ), and Analysts (Hugo/Sangnika)</li>
+        </ul>
       </div>
     </div>
 
@@ -2683,6 +2576,61 @@
   window.addEventListener('load', () => {
     if (document.getElementById('ai-dashboard').classList.contains('active')) {
       setTimeout(initCharts, 200);
+    }
+  });
+
+  // ========== GOOGLE AUTH ==========
+  const ALLOWED_DOMAIN = 'phiture.com';
+  const GOOGLE_CLIENT_ID = 'YOUR_CLIENT_ID.apps.googleusercontent.com'; // Replace with real Client ID
+
+  function decodeJwt(token) {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    return JSON.parse(decodeURIComponent(atob(base64).split('').map(c =>
+      '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+    ).join('')));
+  }
+
+  function handleCredentialResponse(response) {
+    const payload = decodeJwt(response.credential);
+    const email = payload.email || '';
+    const domain = email.split('@')[1];
+
+    if (domain === ALLOWED_DOMAIN) {
+      document.getElementById('auth-overlay').classList.add('hidden');
+      sessionStorage.setItem('ai_insights_auth', JSON.stringify({
+        email: email,
+        name: payload.name,
+        picture: payload.picture
+      }));
+    } else {
+      document.getElementById('auth-error').classList.add('visible');
+    }
+  }
+
+  window.addEventListener('load', () => {
+    // Check for existing session
+    const saved = sessionStorage.getItem('ai_insights_auth');
+    if (saved) {
+      document.getElementById('auth-overlay').classList.add('hidden');
+      return;
+    }
+
+    // Initialize Google Sign-In
+    if (typeof google !== 'undefined' && GOOGLE_CLIENT_ID !== 'YOUR_CLIENT_ID.apps.googleusercontent.com') {
+      google.accounts.id.initialize({
+        client_id: GOOGLE_CLIENT_ID,
+        callback: handleCredentialResponse,
+        hosted_domain: ALLOWED_DOMAIN
+      });
+      google.accounts.id.renderButton(
+        document.getElementById('g_id_signin'),
+        { theme: 'filled_black', size: 'large', text: 'signin_with', shape: 'pill', width: 280 }
+      );
+    } else {
+      // No client ID configured yet - show a message
+      const signinDiv = document.getElementById('g_id_signin');
+      signinDiv.innerHTML = '<p style="color:var(--accent-yellow);font-size:12px;padding:12px;background:rgba(245,158,11,0.1);border-radius:8px;max-width:320px;margin:0 auto">Google Sign-In not yet configured. Set GOOGLE_CLIENT_ID in the source to enable. <br><br><button onclick="document.getElementById(\'auth-overlay\').classList.add(\'hidden\')" style="margin-top:8px;padding:8px 20px;background:var(--phiture-teal);color:white;border:none;border-radius:6px;cursor:pointer;font-size:13px;font-weight:600">Continue without auth (dev mode)</button></p>';
     }
   });
 </script>
