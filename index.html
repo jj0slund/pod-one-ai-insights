@@ -1,0 +1,2674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Insights Platform  - Adobe ASO | Phiture</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+  :root {
+    --adobe-red: #E8352D;
+    --adobe-red-dark: #B22A24;
+    --phiture-teal: #00B4AA;
+    --phiture-teal-dark: #009089;
+    --bg-primary: #0A0F1A;
+    --bg-secondary: #111827;
+    --bg-card: #1A2236;
+    --bg-card-hover: #1F2A42;
+    --border: rgba(255,255,255,0.08);
+    --border-light: rgba(255,255,255,0.12);
+    --text-primary: #F1F5F9;
+    --text-secondary: #94A3B8;
+    --text-muted: #64748B;
+    --accent-green: #22C55E;
+    --accent-yellow: #F59E0B;
+    --accent-orange: #F97316;
+    --accent-purple: #8B5CF6;
+    --accent-blue: #3B82F6;
+    --accent-pink: #EC4899;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---- NAV ---- */
+  nav {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 100;
+    background: rgba(10, 15, 26, 0.88);
+    backdrop-filter: blur(24px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 32px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: -0.3px;
+    white-space: nowrap;
+  }
+  .logo .diamond {
+    width: 28px; height: 28px;
+    background: linear-gradient(135deg, var(--phiture-teal), var(--phiture-teal-dark));
+    border-radius: 6px;
+    transform: rotate(45deg);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .logo .diamond span { transform: rotate(-45deg); font-size: 14px; }
+  .logo .sep { color: var(--text-muted); font-weight: 300; }
+  .logo .adobe-tag { color: var(--adobe-red); font-weight: 600; font-size: 12px; }
+  .nav-links {
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .nav-links a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 8px 16px;
+    border-radius: 8px;
+    transition: all 0.2s;
+    white-space: nowrap;
+    cursor: pointer;
+    border: 1px solid transparent;
+    letter-spacing: 0.2px;
+  }
+  .nav-links a:hover { color: #fff; background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.1); }
+  .nav-links a.active { color: #fff; background: var(--phiture-teal); border-color: var(--phiture-teal); }
+
+  /* ---- SECTIONS ---- */
+  .tab-content { display: none; padding: 80px 0 60px; min-height: 100vh; }
+  .tab-content.active { display: block; }
+
+  /* ---- NEXT SECTION CTA ---- */
+  .next-section {
+    margin: 64px 0 0;
+    padding: 32px;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: linear-gradient(135deg, rgba(0,180,170,0.06), rgba(59,130,246,0.06));
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  .next-section:hover { border-color: var(--phiture-teal); background: linear-gradient(135deg, rgba(0,180,170,0.12), rgba(59,130,246,0.12)); transform: translateY(-2px); }
+  .next-section .next-label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--phiture-teal); margin-bottom: 6px; }
+  .next-section .next-title { font-size: 20px; font-weight: 700; color: var(--text-primary); }
+  .next-section .next-desc { font-size: 14px; color: var(--text-secondary); margin-top: 4px; }
+  .next-section .next-arrow { font-size: 32px; color: var(--phiture-teal); margin-left: 24px; flex-shrink: 0; }
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 32px; }
+
+  /* ---- TYPOGRAPHY ---- */
+  h1 { font-size: 42px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.15; }
+  h2 { font-size: 28px; font-weight: 700; letter-spacing: -0.8px; margin-bottom: 24px; }
+  h3 { font-size: 18px; font-weight: 600; letter-spacing: -0.3px; margin-bottom: 12px; }
+  h4 { font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 16px; }
+  p { color: var(--text-secondary); line-height: 1.7; font-size: 15px; }
+  .subtitle { color: var(--text-secondary); font-size: 18px; line-height: 1.6; max-width: 700px; }
+
+  /* ---- HERO ---- */
+  .hero {
+    padding: 100px 0 60px;
+    text-align: center;
+    position: relative;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -100px; left: 50%; transform: translateX(-50%);
+    width: 800px; height: 500px;
+    background: radial-gradient(ellipse, rgba(0,180,170,0.08) 0%, rgba(232,53,45,0.04) 50%, transparent 80%);
+    pointer-events: none;
+  }
+  .hero h1 { margin-bottom: 16px; }
+  .hero .subtitle { margin: 0 auto 32px; }
+  .badge {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    margin-bottom: 20px;
+  }
+  .badge-teal { background: rgba(0,180,170,0.15); color: var(--phiture-teal); border: 1px solid rgba(0,180,170,0.3); }
+  .badge-red { background: rgba(232,53,45,0.15); color: var(--adobe-red); border: 1px solid rgba(232,53,45,0.3); }
+  .badge-green { background: rgba(34,197,94,0.15); color: var(--accent-green); border: 1px solid rgba(34,197,94,0.3); }
+  .badge-yellow { background: rgba(245,158,11,0.15); color: var(--accent-yellow); border: 1px solid rgba(245,158,11,0.3); }
+  .badge-purple { background: rgba(139,92,246,0.15); color: var(--accent-purple); border: 1px solid rgba(139,92,246,0.3); }
+  .badge-blue { background: rgba(59,130,246,0.15); color: var(--accent-blue); border: 1px solid rgba(59,130,246,0.3); }
+
+  /* ---- CARDS ---- */
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    transition: all 0.2s;
+  }
+  .card:hover { border-color: var(--border-light); background: var(--bg-card-hover); }
+  .card-grid { display: grid; gap: 16px; }
+  .card-grid-2 { grid-template-columns: repeat(2, 1fr); }
+  .card-grid-3 { grid-template-columns: repeat(3, 1fr); }
+  .card-grid-4 { grid-template-columns: repeat(4, 1fr); }
+
+  /* ---- SECTION SPACING ---- */
+  .section { margin-bottom: 60px; }
+  .section-sm { margin-bottom: 40px; }
+  .section-divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 48px 0;
+  }
+
+  /* ---- ARCHITECTURE DIAGRAM ---- */
+  .arch-diagram {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding: 32px;
+    background: var(--bg-secondary);
+    border-radius: 16px;
+    border: 1px solid var(--border);
+  }
+  .arch-layer {
+    border-radius: 12px;
+    padding: 24px;
+    position: relative;
+  }
+  .arch-layer-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .arch-layer-label .num {
+    width: 24px; height: 24px;
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700;
+  }
+  .layer-data { background: rgba(59,130,246,0.08); border: 1px solid rgba(59,130,246,0.2); }
+  .layer-data .arch-layer-label { color: var(--accent-blue); }
+  .layer-data .num { background: rgba(59,130,246,0.2); color: var(--accent-blue); }
+  .layer-context { background: rgba(139,92,246,0.08); border: 1px solid rgba(139,92,246,0.2); }
+  .layer-context .arch-layer-label { color: var(--accent-purple); }
+  .layer-context .num { background: rgba(139,92,246,0.2); color: var(--accent-purple); }
+  .layer-interface { background: rgba(0,180,170,0.08); border: 1px solid rgba(0,180,170,0.2); }
+  .layer-interface .arch-layer-label { color: var(--phiture-teal); }
+  .layer-interface .num { background: rgba(0,180,170,0.2); color: var(--phiture-teal); }
+
+  .arch-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .arch-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+  }
+  .arch-item .icon { font-size: 16px; }
+  .arch-item.stored { border-color: rgba(59,130,246,0.3); }
+  .arch-item.api { border-color: rgba(245,158,11,0.3); border-style: dashed; }
+  .arch-item .tag {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 4px;
+    text-transform: uppercase;
+  }
+  .tag-stored { background: rgba(59,130,246,0.2); color: var(--accent-blue); }
+  .tag-api { background: rgba(245,158,11,0.2); color: var(--accent-yellow); }
+  .tag-limited { background: rgba(232,53,45,0.2); color: var(--adobe-red); }
+
+  .arch-connector {
+    display: flex;
+    justify-content: center;
+    padding: 4px 0;
+    color: var(--text-muted);
+    font-size: 20px;
+  }
+
+  /* ---- AGENT CARDS ---- */
+  .agent-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    border-top: 3px solid;
+  }
+  .agent-card.ongoing { border-top-color: var(--accent-green); }
+  .agent-card.ondemand { border-top-color: var(--accent-blue); }
+  .agent-card.output { border-top-color: var(--accent-purple); }
+  .agent-list { list-style: none; padding: 0; }
+  .agent-list li {
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .agent-list li:last-child { border-bottom: none; }
+  .agent-list li .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* ---- TIMELINE ---- */
+  .timeline {
+    display: flex;
+    gap: 0;
+    position: relative;
+    padding: 20px 0;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent-blue), var(--phiture-teal), var(--accent-green));
+    z-index: 0;
+  }
+  .timeline-item {
+    flex: 1;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+    padding: 0 8px;
+  }
+  .timeline-dot {
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    margin: 0 auto 12px;
+    border: 3px solid var(--bg-primary);
+  }
+  .timeline-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+  }
+  .timeline-desc {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.4;
+  }
+
+  /* ---- TABLES ---- */
+  .table-wrap {
+    overflow-x: auto;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  thead th {
+    background: var(--bg-card);
+    padding: 12px 16px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  tbody td {
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-secondary);
+    vertical-align: top;
+  }
+  tbody tr:hover { background: rgba(255,255,255,0.02); }
+  tbody tr:last-child td { border-bottom: none; }
+
+  .status-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 6px;
+    vertical-align: middle;
+  }
+  .status-green { background: var(--accent-green); }
+  .status-yellow { background: var(--accent-yellow); }
+  .status-red { background: var(--adobe-red); }
+
+  .feasibility-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .feas-auto { background: rgba(34,197,94,0.15); color: var(--accent-green); }
+  .feas-semi { background: rgba(245,158,11,0.15); color: var(--accent-yellow); }
+  .feas-manual { background: rgba(232,53,45,0.15); color: var(--adobe-red); }
+
+  /* ---- ACCORDION ---- */
+  .accordion-item {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 8px;
+    overflow: hidden;
+  }
+  .accordion-header {
+    padding: 14px 20px;
+    background: var(--bg-card);
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 500;
+    font-size: 14px;
+    transition: background 0.2s;
+  }
+  .accordion-header:hover { background: var(--bg-card-hover); }
+  .accordion-header .arrow {
+    transition: transform 0.3s;
+    color: var(--text-muted);
+  }
+  .accordion-item.open .accordion-header .arrow { transform: rotate(180deg); }
+  .accordion-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    background: var(--bg-secondary);
+  }
+  .accordion-item.open .accordion-body { max-height: 2000px; }
+  .accordion-body-inner { padding: 16px 20px; }
+
+  /* ---- SCOPE BOXES ---- */
+  .scope-box {
+    border-radius: 12px;
+    padding: 24px;
+    border: 2px solid;
+  }
+  .scope-in { border-color: var(--accent-green); background: rgba(34,197,94,0.04); }
+  .scope-out { border-color: var(--adobe-red); background: rgba(232,53,45,0.04); }
+  .scope-box h3 { display: flex; align-items: center; gap: 8px; }
+
+  .checklist { list-style: none; padding: 0; }
+  .checklist li {
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    line-height: 1.5;
+  }
+  .checklist li:last-child { border-bottom: none; }
+  .check-icon { flex-shrink: 0; margin-top: 2px; }
+
+  /* ---- WORKFLOW ---- */
+  .workflow {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .workflow-step {
+    padding: 16px 20px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    text-align: center;
+    min-width: 130px;
+  }
+  .workflow-step .step-num {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--accent-blue);
+    margin-bottom: 6px;
+  }
+  .workflow-step .step-title {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .workflow-step .step-desc {
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+  .workflow-arrow {
+    color: var(--text-muted);
+    font-size: 18px;
+    padding: 0 6px;
+  }
+
+  /* ---- METRIC CARDS (for mock dashboards) ---- */
+  .metric-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px;
+    text-align: center;
+  }
+  .metric-card .metric-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+  .metric-card .metric-value {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -1px;
+  }
+  .metric-card .metric-change {
+    font-size: 12px;
+    font-weight: 600;
+    margin-top: 4px;
+  }
+  .change-up { color: var(--accent-green); }
+  .change-down { color: var(--adobe-red); }
+
+  /* ---- MOCK CHAT ---- */
+  .chat-mock {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    max-width: 700px;
+  }
+  .chat-msg {
+    margin-bottom: 16px;
+    display: flex;
+    gap: 12px;
+  }
+  .chat-avatar {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .chat-avatar.user { background: rgba(59,130,246,0.2); color: var(--accent-blue); }
+  .chat-avatar.ai { background: rgba(0,180,170,0.2); color: var(--phiture-teal); }
+  .chat-bubble {
+    padding: 12px 16px;
+    border-radius: 10px;
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    max-width: 500px;
+  }
+  .chat-bubble.user-bubble { background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.2); }
+  .chat-bubble.ai-bubble { background: var(--bg-card); border: 1px solid var(--border); }
+
+  /* ---- COMPARISON TABLE ---- */
+  .compare-table th:first-child { width: 25%; }
+  .compare-winner { background: rgba(34,197,94,0.06) !important; }
+  .rec-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    background: rgba(0,180,170,0.15);
+    color: var(--phiture-teal);
+    border: 1px solid rgba(0,180,170,0.3);
+  }
+
+  /* ---- PERSONA TABS ---- */
+  .persona-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  .persona-tab {
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    transition: all 0.2s;
+  }
+  .persona-tab:hover { border-color: var(--border-light); color: var(--text-primary); }
+  .persona-tab.active { background: rgba(0,180,170,0.15); color: var(--phiture-teal); border-color: rgba(0,180,170,0.3); }
+  .persona-view { display: none; }
+  .persona-view.active { display: block; }
+
+  /* ---- ALERT CARD ---- */
+  .alert-card {
+    border: 1px solid rgba(245,158,11,0.3);
+    background: rgba(245,158,11,0.04);
+    border-radius: 12px;
+    padding: 20px;
+    border-left: 4px solid var(--accent-yellow);
+  }
+  .alert-card .alert-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 8px;
+    color: var(--accent-yellow);
+  }
+  .alert-card .alert-body { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+  .alert-card ul { margin-top: 8px; padding-left: 20px; }
+  .alert-card li { margin-bottom: 4px; }
+
+  /* ---- TWO COL ---- */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .three-col { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+
+  /* ---- REPO CARD ---- */
+  .repo-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    border-left: 4px solid;
+  }
+  .repo-card.analytics { border-left-color: var(--accent-blue); }
+  .repo-card.presentations { border-left-color: var(--accent-purple); }
+
+  /* ---- SUMMARY STATS ---- */
+  .stats-row {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .stat-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    flex: 1;
+    min-width: 120px;
+    text-align: center;
+  }
+  .stat-value { font-size: 32px; font-weight: 800; letter-spacing: -1px; }
+  .stat-label { font-size: 12px; color: var(--text-muted); margin-top: 4px; font-weight: 500; }
+
+  /* ---- CHART CONTAINERS ---- */
+  .chart-container {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    position: relative;
+  }
+  .chart-container canvas { max-height: 300px; }
+
+  /* ---- RESPONSIVE ---- */
+  @media (max-width: 900px) {
+    .card-grid-2, .card-grid-3, .card-grid-4, .two-col, .three-col { grid-template-columns: 1fr; }
+    h1 { font-size: 30px; }
+    h2 { font-size: 22px; }
+    .nav-links a { font-size: 11px; padding: 6px 10px; }
+    .workflow { flex-direction: column; }
+    .workflow-arrow { transform: rotate(90deg); }
+    .timeline { flex-direction: column; gap: 16px; }
+    .timeline::before { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ========== NAVIGATION ========== -->
+<nav>
+  <div class="logo">
+    <div class="diamond"><span>P</span></div>
+    <span>AI Insights</span>
+    <span class="sep">|</span>
+    <span class="adobe-tag">ADOBE</span>
+  </div>
+  <div class="nav-links">
+    <a onclick="switchTab('master-plan')" id="nav-master-plan" class="active">Master Plan</a>
+    <a onclick="switchTab('ai-deck')" id="nav-ai-deck">AI Reporting</a>
+    <a onclick="switchTab('ai-dashboard')" id="nav-ai-dashboard">AI Dashboard</a>
+  </div>
+</nav>
+
+<!-- ================================================================== -->
+<!-- TAB 1: MASTER PLAN                                                  -->
+<!-- ================================================================== -->
+<div id="master-plan" class="tab-content active">
+  <div class="container">
+    <div class="hero">
+      <div class="badge badge-teal">STRATEGY DOCUMENT  - MARCH 2026</div>
+      <h1>AI Insights Platform<br><span style="color:var(--phiture-teal)">Adobe DC</span> ASO</h1>
+      <p class="subtitle">From manual, static reporting to intelligent, automated ASO analytics. A three-layer architecture powering dashboards, presentations, and proactive insights.</p>
+    </div>
+
+    <!-- Architecture Diagram -->
+    <div class="section">
+      <h4>System Architecture</h4>
+      <h2>Three-Layer Data Intelligence</h2>
+      <div class="arch-diagram">
+
+        <!-- Data Layer (1) -->
+        <div class="arch-layer layer-data">
+          <div class="arch-layer-label">
+            <div class="num">1</div> Data Layer  - Where Data Lives
+          </div>
+          <div class="two-col" style="margin-top:8px">
+            <div>
+              <div style="font-size:12px;font-weight:600;color:var(--accent-blue);margin-bottom:10px">PERSISTENT (BigQuery)</div>
+              <div class="arch-items" style="flex-direction:column">
+                <div class="arch-item stored" style="width:100%"><span class="icon">🍎</span> App Store Connect <span class="tag tag-stored">Stored</span></div>
+                <div class="arch-item stored" style="width:100%"><span class="icon">▶️</span> Google Play Console <span class="tag tag-stored">Stored</span></div>
+                <div class="arch-item stored" style="width:100%"><span class="icon">🔑</span> AppTweak (500+ Keywords) <span class="tag tag-stored">Stored</span></div>
+                <div class="arch-item stored" style="width:100%"><span class="icon">📡</span> Sensor Tower <span class="tag tag-stored">Stored</span></div>
+                <div class="arch-item stored" style="width:100%"><span class="icon">🧪</span> Experiment Results <span class="tag tag-stored">Stored</span></div>
+              </div>
+            </div>
+            <div>
+              <div style="font-size:12px;font-weight:600;color:var(--accent-yellow);margin-bottom:10px">ON-DEMAND (API Calls)</div>
+              <div class="arch-items" style="flex-direction:column">
+                <div class="arch-item api" style="width:100%"><span class="icon">🔑</span> AppTweak API <span class="tag tag-api">API</span></div>
+                <div class="arch-item api" style="width:100%"><span class="icon">📡</span> Sensor Tower API <span class="tag tag-limited">Rate Limited</span></div>
+                <div class="arch-item api" style="width:100%"><span class="icon">🎯</span> Apple Search Ads API <span class="tag tag-api">API</span></div>
+                <div class="arch-item api" style="width:100%"><span class="icon">📊</span> AppsFlyer / Branch <span class="tag tag-api">API</span></div>
+                <div class="arch-item api" style="width:100%"><span class="icon">🖼️</span> Creative Assets <span class="tag tag-api">Upload</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="arch-connector">▼</div>
+
+        <!-- Context Layer (2) -->
+        <div class="arch-layer layer-context">
+          <div class="arch-layer-label">
+            <div class="num">2</div> Context Layer - What the AI Knows
+          </div>
+          <p style="font-size:13px;color:var(--text-secondary);margin:8px 0 4px 0">A <code style="background:rgba(255,255,255,0.08);padding:2px 6px;border-radius:4px;font-size:12px">context/</code> folder of Markdown files inside the GitHub repo. Each <code style="background:rgba(255,255,255,0.08);padding:2px 6px;border-radius:4px;font-size:12px">.md</code> file defines one piece of business logic - readable by both humans and AI (Claude Code). When an agent runs a query or generates a slide, it reads these files to understand how to interpret the data.</p>
+          <div class="two-col" style="margin-top:12px">
+            <div>
+              <div style="font-size:12px;font-weight:600;color:var(--accent-purple);margin-bottom:10px">UNIVERSAL KNOWLEDGE</div>
+              <div style="font-size:11px;color:var(--text-muted);margin-bottom:8px">Files that apply to any ASO client</div>
+              <div class="arch-items" style="flex-direction:column">
+                <div class="arch-item" style="width:100%"><code style="font-size:11px;opacity:0.6">schema-catalog.md</code> - Table structures, column definitions, join keys</div>
+                <div class="arch-item" style="width:100%"><code style="font-size:11px;opacity:0.6">metrics.md</code> - Download definitions (FTD, SP), CVR formulas, platform differences</div>
+                <div class="arch-item" style="width:100%"><code style="font-size:11px;opacity:0.6">glossary.md</code> - ASO terminology (IAE, PCE, CPP, KWO, etc.)</div>
+                <div class="arch-item" style="width:100%"><code style="font-size:11px;opacity:0.6">platforms.md</code> - iOS vs Android metric mapping and naming conventions</div>
+              </div>
+            </div>
+            <div>
+              <div style="font-size:12px;font-weight:600;color:var(--accent-pink);margin-bottom:10px">CLIENT-SPECIFIC (ADOBE)</div>
+              <div style="font-size:11px;color:var(--text-muted);margin-bottom:8px">Files specific to the Adobe DC account</div>
+              <div class="arch-items" style="flex-direction:column">
+                <div class="arch-item" style="width:100%;border-color:rgba(236,72,153,0.3)"><code style="font-size:11px;opacity:0.6">fiscal-calendar.md</code> - FY starts December, fiscal week numbering, quarter boundaries</div>
+                <div class="arch-item" style="width:100%;border-color:rgba(236,72,153,0.3)"><code style="font-size:11px;opacity:0.6">market-tiers.md</code> - P0 (US, DE, MX, IN, JP, BR), P1 (GB, CA, AU, FR, IT), P2 (TR, CN, PL, SA)</div>
+                <div class="arch-item" style="width:100%;border-color:rgba(236,72,153,0.3)"><code style="font-size:11px;opacity:0.6">products.md</code> - Scan, Acrobat Reader, DC - app IDs, store URLs, bundled vs standalone</div>
+                <div class="arch-item" style="width:100%;border-color:rgba(236,72,153,0.3)"><code style="font-size:11px;opacity:0.6">targets.md</code> - Q2 FY26 quarterly targets, CC win-back focus, growth benchmarks</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="arch-connector">▼</div>
+
+        <!-- Interface Layer (3) -->
+        <div class="arch-layer layer-interface">
+          <div class="arch-layer-label">
+            <div class="num">3</div> Interface Layer  - What People See
+          </div>
+          <div class="arch-items">
+            <div class="arch-item"><span class="icon">📊</span> Interactive Dashboards</div>
+            <div class="arch-item"><span class="icon">📑</span> Bi-Weekly Presentations</div>
+            <div class="arch-item"><span class="icon">🔍</span> One-Off Analyses</div>
+            <div class="arch-item"><span class="icon">⚡</span> Proactive Alerts</div>
+            <div class="arch-item"><span class="icon">🤖</span> AI Agent Skills</div>
+            <div class="arch-item"><span class="icon">💬</span> Conversational Q&A</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Agent System -->
+    <div class="section">
+      <h4>Intelligence Layer</h4>
+      <h2>Agent &amp; Skills System</h2>
+      <p style="margin-bottom:24px">A GitHub-based repository of specialized AI agents that run on schedule or on-demand, each with access to the data and context layers.</p>
+      <div class="three-col">
+        <div class="agent-card ongoing">
+          <h3 style="color:var(--accent-green);font-size:14px">🟢 Ongoing Agents</h3>
+          <p style="font-size:12px;color:var(--text-muted);margin-bottom:12px">Run on schedule, monitor continuously</p>
+          <ul class="agent-list">
+            <li><span class="dot" style="background:var(--accent-green)"></span> Weekly ASO Performance Analysis</li>
+            <li><span class="dot" style="background:var(--accent-green)"></span> Anomaly Detection (download drops)</li>
+            <li><span class="dot" style="background:var(--accent-green)"></span> Experiment Result Monitoring</li>
+            <li><span class="dot" style="background:var(--accent-green)"></span> Competitor Movement Tracker</li>
+            <li><span class="dot" style="background:var(--accent-green)"></span> Keyword Ranking Drift Alerts</li>
+          </ul>
+        </div>
+        <div class="agent-card ondemand">
+          <h3 style="color:var(--accent-blue);font-size:14px">🔵 On-Demand Skills</h3>
+          <p style="font-size:12px;color:var(--text-muted);margin-bottom:12px">Triggered by user or other agents</p>
+          <ul class="agent-list">
+            <li><span class="dot" style="background:var(--accent-blue)"></span> Keyword Optimization Recommender</li>
+            <li><span class="dot" style="background:var(--accent-blue)"></span> Download Drop Root Cause Analysis</li>
+            <li><span class="dot" style="background:var(--accent-blue)"></span> Experiment Opportunity Finder</li>
+            <li><span class="dot" style="background:var(--accent-blue)"></span> Creative Asset Analyzer</li>
+            <li><span class="dot" style="background:var(--accent-blue)"></span> Market Tier Deep Dive</li>
+          </ul>
+        </div>
+        <div class="agent-card output">
+          <h3 style="color:var(--accent-purple);font-size:14px">🟣 Output Generators</h3>
+          <p style="font-size:12px;color:var(--text-muted);margin-bottom:12px">Produce shareable deliverables</p>
+          <ul class="agent-list">
+            <li><span class="dot" style="background:var(--accent-purple)"></span> Bi-Weekly Deck Generator (PPTX)</li>
+            <li><span class="dot" style="background:var(--accent-purple)"></span> Dashboard Data Refresh</li>
+            <li><span class="dot" style="background:var(--accent-purple)"></span> Ad-Hoc Insight Reports</li>
+            <li><span class="dot" style="background:var(--accent-purple)"></span> Executive Summary Writer</li>
+            <li><span class="dot" style="background:var(--accent-purple)"></span> Experiment Brief Creator</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Repo Strategy -->
+    <div class="section">
+      <h4>Development Infrastructure</h4>
+      <h2>Repository Strategy</h2>
+      <div class="two-col">
+        <div class="repo-card analytics">
+          <h3 style="font-size:15px">📦 aso-analytics</h3>
+          <p style="font-size:12px;color:var(--text-muted);margin-bottom:12px">Merlin's existing repo  - already connected to BigQuery</p>
+          <ul class="checklist">
+            <li><span class="check-icon" style="color:var(--accent-green)">✓</span> BigQuery read permissions</li>
+            <li><span class="check-icon" style="color:var(--accent-green)">✓</span> Schema catalog with fiscal week logic</li>
+            <li><span class="check-icon" style="color:var(--accent-blue)">+</span> Agent skills &amp; orchestrators</li>
+            <li><span class="check-icon" style="color:var(--accent-blue)">+</span> Context layer MD configs</li>
+            <li><span class="check-icon" style="color:var(--accent-blue)">+</span> Dashboard generation code</li>
+          </ul>
+        </div>
+        <div class="repo-card presentations">
+          <h3 style="font-size:15px">📑 aso-presentations</h3>
+          <p style="font-size:12px;color:var(--text-muted);margin-bottom:12px">New repo  - keeps deck generation separate</p>
+          <ul class="checklist">
+            <li><span class="check-icon" style="color:var(--accent-purple)">+</span> PPTX templates (Scan, Reader, DC)</li>
+            <li><span class="check-icon" style="color:var(--accent-purple)">+</span> Chart generation scripts (matplotlib)</li>
+            <li><span class="check-icon" style="color:var(--accent-purple)">+</span> Slide content injection pipeline</li>
+            <li><span class="check-icon" style="color:var(--accent-purple)">+</span> Manual input form (commentary)</li>
+            <li><span class="check-icon" style="color:var(--accent-purple)">+</span> Version archive of generated decks</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Team Roles -->
+    <div class="section">
+      <h4>Team Access</h4>
+      <h2>Who Uses What</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Role</th>
+              <th>People</th>
+              <th>Primary Access</th>
+              <th>Key Needs</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="font-weight:600;color:var(--text-primary)">Executive Stakeholders</td>
+              <td>Susan, Nathan</td>
+              <td>Executive dashboards, bi-weekly decks</td>
+              <td>High-level KPIs, target attainment, strategic summaries</td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;color:var(--text-primary)">Growth Lead</td>
+              <td>JJ</td>
+              <td>All systems + Claude Code</td>
+              <td>Experiment pipeline, strategy, agent orchestration</td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;color:var(--text-primary)">Data &amp; Insights</td>
+              <td>Hugo, Sangnika</td>
+              <td>Analytics repo, BigQuery, dashboards</td>
+              <td>Data quality, schema management, analysis automation</td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;color:var(--text-primary)">ASO Consultants</td>
+              <td>Orlane, Zornitsa, Sofia</td>
+              <td>Dashboards, deck input forms, insights</td>
+              <td>Market-specific data, keyword reports, experiment results</td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;color:var(--text-primary)">Creative Team</td>
+              <td>Assigned creatives</td>
+              <td>Experiment results, creative asset library</td>
+              <td>Winning concepts, experiment briefs, screenshot analysis</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Timeline -->
+    <div class="section">
+      <h4>Milestones</h4>
+      <h2>Roadmap to Production</h2>
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-dot" style="background:var(--accent-blue)"></div>
+          <div class="timeline-label" style="color:var(--accent-blue)">Week 1</div>
+          <div class="timeline-desc"><strong>Hackathon</strong><br>Data layer MVP, context layer basics, first auto-generated deck</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot" style="background:var(--accent-purple)"></div>
+          <div class="timeline-label" style="color:var(--accent-purple)">Week 2-3</div>
+          <div class="timeline-desc"><strong>Iteration</strong><br>Refine deck automation, add keyword &amp; experiment agents</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot" style="background:var(--phiture-teal)"></div>
+          <div class="timeline-label" style="color:var(--phiture-teal)">Month 1</div>
+          <div class="timeline-desc"><strong>Susan Demo</strong><br>Show early version demonstrating new clarity in reporting</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot" style="background:var(--accent-green)"></div>
+          <div class="timeline-label" style="color:var(--accent-green)">Month 2</div>
+          <div class="timeline-desc"><strong>Nathan Ready</strong><br>Polished enough for broader Adobe stakeholders</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot" style="background:var(--accent-yellow)"></div>
+          <div class="timeline-label" style="color:var(--accent-yellow)">Quarter</div>
+          <div class="timeline-desc"><strong>Productized</strong><br>Framework reusable beyond Adobe for other ASO clients</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Next Section CTA -->
+    <div class="next-section" onclick="switchTab('ai-deck')">
+      <div>
+        <div class="next-label">Up Next</div>
+        <div class="next-title">AI Reporting - Automated Bi-Weekly Decks</div>
+        <div class="next-desc">Deep dive into how we automate the Scan and Reader bi-weekly decks with AI + human review</div>
+      </div>
+      <div class="next-arrow">&#8594;</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ================================================================== -->
+<!-- TAB 2: AI DECK - Automated Bi-Weekly Presentations                   -->
+<!-- ================================================================== -->
+<div id="ai-deck" class="tab-content">
+  <div class="container">
+    <div class="hero">
+      <div class="badge badge-red">APPLICATION 1</div>
+      <h1>AI Reporting<br><span style="color:var(--adobe-red)">Automated Presentations</span></h1>
+      <p class="subtitle">Replace hours of manual slide creation with an AI-powered pipeline that generates bi-weekly decks from live data - with human review before delivery.</p>
+    </div>
+
+    <!-- ===== PROBLEM & VISION ===== -->
+    <div class="section">
+      <h4>The Problem</h4>
+      <h2>Why We're Doing This</h2>
+      <div class="two-col" style="margin-bottom:24px">
+        <div class="card" style="border-left:4px solid var(--adobe-red)">
+          <h3 style="color:var(--adobe-red)">The Current Reality</h3>
+          <p style="font-size:14px;margin-bottom:12px">Every two weeks, our team manually builds <strong>2 bi-weekly slide decks</strong> (Scan and Reader) - each 49-168 slides. This involves:</p>
+          <ul class="checklist">
+            <li><span class="check-icon" style="color:var(--adobe-red)">●</span> Manually pulling data from App Store Connect, Google Play Console, AppTweak</li>
+            <li><span class="check-icon" style="color:var(--adobe-red)">●</span> Manually building FTD bar charts and YTD comparison tables</li>
+            <li><span class="check-icon" style="color:var(--adobe-red)">●</span> Manually inserting keyword rankings, experiment results, and event data</li>
+            <li><span class="check-icon" style="color:var(--adobe-red)">●</span> Manually taking app store screenshots and placing them on slides</li>
+            <li><span class="check-icon" style="color:var(--adobe-red)">●</span> Writing strategic commentary, learnings, and next steps</li>
+            <li><span class="check-icon" style="color:var(--adobe-red)">●</span> Estimated <strong>6-10+ hours per cycle</strong> across the team</li>
+          </ul>
+          <p style="font-size:13px;margin-top:12px;color:var(--text-muted)">See for yourself - here are the actual bi-weekly decks:</p>
+          <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
+            <a href="https://docs.google.com/presentation/d/1tZeg6KFCT_AmxSKHUPLaB_Ls0NwHAEWKq540oV1pTdE/edit" target="_blank" style="display:inline-block;padding:8px 16px;background:rgba(0,180,170,0.15);color:var(--phiture-teal);border:1px solid rgba(0,180,170,0.3);border-radius:8px;font-size:13px;font-weight:600;text-decoration:none">Open Scan Deck (Google Slides) &#8594;</a>
+            <a href="https://docs.google.com/presentation/d/1eEzU6VRdu49DGaGQYCBzS570hgrNn_tPu45R6lHEZRs/edit" target="_blank" style="display:inline-block;padding:8px 16px;background:rgba(232,53,45,0.15);color:var(--adobe-red);border:1px solid rgba(232,53,45,0.3);border-radius:8px;font-size:13px;font-weight:600;text-decoration:none">Open Reader Deck (Google Slides) &#8594;</a>
+          </div>
+        </div>
+        <div class="card" style="border-left:4px solid var(--accent-green)">
+          <h3 style="color:var(--accent-green)">The Vision</h3>
+          <p style="font-size:14px;margin-bottom:12px">A system where <strong>AI generates 70-80% of the deck automatically</strong>, and consultants focus only on strategic commentary and review:</p>
+          <ul class="checklist">
+            <li><span class="check-icon" style="color:var(--accent-green)">●</span> Data pulled automatically from BigQuery (console + AppTweak data)</li>
+            <li><span class="check-icon" style="color:var(--accent-green)">●</span> Charts and tables generated programmatically matching the existing format</li>
+            <li><span class="check-icon" style="color:var(--accent-green)">●</span> AI drafts initial narrative, analysis, and commentary</li>
+            <li><span class="check-icon" style="color:var(--accent-green)">●</span> Consultant reviews, edits, and approves (human-in-the-loop)</li>
+            <li><span class="check-icon" style="color:var(--accent-green)">●</span> Final PPTX generated and ready to send to Adobe</li>
+            <li><span class="check-icon" style="color:var(--accent-green)">●</span> Estimated <strong>30-60 minutes per cycle</strong> (review only)</li>
+          </ul>
+          <p style="font-size:14px;margin-top:12px"><strong style="color:var(--accent-green)">That's a 90% reduction in manual effort.</strong></p>
+        </div>
+      </div>
+
+      <div class="card" style="border:1px solid rgba(0,180,170,0.3);background:rgba(0,180,170,0.04)">
+        <h3 style="color:var(--phiture-teal)">Human-in-the-Loop, Not Human-Out-of-the-Loop</h3>
+        <p style="font-size:14px">Nothing in this system runs without human review. AI generates the first draft - data, charts, and narrative - but a consultant always reviews, edits, and approves before anything goes to Adobe. The goal is to eliminate tedious data gathering and formatting, not strategic thinking.</p>
+      </div>
+    </div>
+
+    <!-- ===== DECK AUDIT: CURRENT STATE ===== -->
+    <div style="border-top:2px solid var(--border);margin:48px 0 0 0;padding-top:48px">
+
+    <!-- Deck Overview -->
+    <div class="section">
+      <h4>Decks Analyzed</h4>
+      <h2>Current State: 2 Bi-Weekly Decks</h2>
+      <p style="margin-bottom:20px">We audited both bi-weekly slide decks - 217 pages total - mapping every data point to its source with automation feasibility scoring.</p>
+      <div class="two-col">
+        <div class="card" style="border-top:3px solid var(--phiture-teal)">
+          <h3>Adobe Scan</h3>
+          <p style="font-size:13px;margin-bottom:8px">168 slides - FY25 Q4 - FY26 Q2</p>
+          <p style="font-size:12px;color:var(--text-muted);margin-bottom:12px">Most detailed deck with full experiment backlog, campaign planning, and multi-period history.</p>
+          <a href="https://docs.google.com/presentation/d/1tZeg6KFCT_AmxSKHUPLaB_Ls0NwHAEWKq540oV1pTdE/edit" target="_blank" style="font-size:12px;color:var(--phiture-teal);text-decoration:none;font-weight:600">Open in Google Slides &#8594;</a>
+        </div>
+        <div class="card" style="border-top:3px solid var(--adobe-red)">
+          <h3>Acrobat Reader</h3>
+          <p style="font-size:13px;margin-bottom:8px">49 slides - FY26 Q2</p>
+          <p style="font-size:12px;color:var(--text-muted);margin-bottom:12px">Focus on conversion experiments, keyword optimization, and paid media support.</p>
+          <a href="https://docs.google.com/presentation/d/1eEzU6VRdu49DGaGQYCBzS570hgrNn_tPu45R6lHEZRs/edit" target="_blank" style="font-size:12px;color:var(--adobe-red);text-decoration:none;font-weight:600">Open in Google Slides &#8594;</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Common Slide Structure -->
+    <div class="section">
+      <h4>Common Pattern</h4>
+      <h2>Shared Slide Structure Across Both Decks</h2>
+      <p style="margin-bottom:20px">Both decks follow a consistent template, making automation more efficient - build once, use for both products.</p>
+      <div class="card-grid card-grid-4">
+        <div class="card" style="text-align:center;padding:16px">
+          <div style="font-size:10px;font-weight:700;color:var(--accent-green);margin-bottom:6px">SLIDE 1</div>
+          <div style="font-size:13px;font-weight:600">Title &amp; Quarter</div>
+        </div>
+        <div class="card" style="text-align:center;padding:16px">
+          <div style="font-size:10px;font-weight:700;color:var(--accent-green);margin-bottom:6px">SLIDE 2</div>
+          <div style="font-size:13px;font-weight:600">Managed Locales</div>
+        </div>
+        <div class="card" style="text-align:center;padding:16px">
+          <div style="font-size:10px;font-weight:700;color:var(--accent-green);margin-bottom:6px">SLIDE 3</div>
+          <div style="font-size:13px;font-weight:600">Glossary</div>
+        </div>
+        <div class="card" style="text-align:center;padding:16px">
+          <div style="font-size:10px;font-weight:700;color:var(--accent-green);margin-bottom:6px">SLIDE 4</div>
+          <div style="font-size:13px;font-weight:600">Quick Reference</div>
+        </div>
+        <div class="card" style="text-align:center;padding:16px">
+          <div style="font-size:10px;font-weight:700;color:var(--accent-yellow);margin-bottom:6px">SLIDE 5</div>
+          <div style="font-size:13px;font-weight:600">Next Big Moments</div>
+        </div>
+        <div class="card" style="text-align:center;padding:16px;border-top:2px solid var(--accent-green)">
+          <div style="font-size:10px;font-weight:700;color:var(--accent-green);margin-bottom:6px">SLIDE 6-7</div>
+          <div style="font-size:13px;font-weight:600">Performance Recap</div>
+        </div>
+        <div class="card" style="text-align:center;padding:16px">
+          <div style="font-size:10px;font-weight:700;color:var(--adobe-red);margin-bottom:6px">SLIDE 8</div>
+          <div style="font-size:13px;font-weight:600">Q2 Strategy</div>
+        </div>
+        <div class="card" style="text-align:center;padding:16px">
+          <div style="font-size:10px;font-weight:700;color:var(--accent-yellow);margin-bottom:6px">SLIDES 9+</div>
+          <div style="font-size:13px;font-weight:600">Bi-Weekly Recap</div>
+        </div>
+        <div class="card" style="text-align:center;padding:16px">
+          <div style="font-size:10px;font-weight:700;color:var(--accent-yellow);margin-bottom:6px">EXPERIMENTS</div>
+          <div style="font-size:13px;font-weight:600">A/B Tests</div>
+        </div>
+        <div class="card" style="text-align:center;padding:16px;border-top:2px solid var(--accent-green)">
+          <div style="font-size:10px;font-weight:700;color:var(--accent-green);margin-bottom:6px">EVENTS</div>
+          <div style="font-size:13px;font-weight:600">IAE / PCE Results</div>
+        </div>
+        <div class="card" style="text-align:center;padding:16px;border-top:2px solid var(--accent-green)">
+          <div style="font-size:10px;font-weight:700;color:var(--accent-green);margin-bottom:6px">KEYWORDS</div>
+          <div style="font-size:13px;font-weight:600">Ranking Changes</div>
+        </div>
+        <div class="card" style="text-align:center;padding:16px">
+          <div style="font-size:10px;font-weight:700;color:var(--adobe-red);margin-bottom:6px">NEXT STEPS</div>
+          <div style="font-size:13px;font-weight:600">Actions &amp; Qs</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Full Metric Audit Table -->
+    <div class="section">
+      <h4>Comprehensive Audit</h4>
+      <h2>Every Data Point Mapped</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Metric / Data Point</th>
+              <th>Category</th>
+              <th>Decks</th>
+              <th>Data Source</th>
+              <th>Feasibility</th>
+              <th>Hackathon</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td colspan="6" style="font-weight:700;color:var(--accent-blue);background:rgba(59,130,246,0.06);text-transform:uppercase;font-size:11px;letter-spacing:1px">Performance Metrics</td></tr>
+            <tr>
+              <td style="font-weight:500;color:var(--text-primary)">Total First-Time Downloads (iOS)</td>
+              <td>KPI</td><td>Both</td>
+              <td>App Store Connect → BigQuery</td>
+              <td><span class="feasibility-badge feas-auto">Auto</span></td>
+              <td style="color:var(--accent-green)">Day 3</td>
+            </tr>
+            <tr>
+              <td style="font-weight:500;color:var(--text-primary)">Total First-Time Downloads (Android)</td>
+              <td>KPI</td><td>Both</td>
+              <td>Google Play Console → BigQuery</td>
+              <td><span class="feasibility-badge feas-auto">Auto</span></td>
+              <td style="color:var(--accent-green)">Day 3</td>
+            </tr>
+            <tr>
+              <td style="font-weight:500;color:var(--text-primary)">YTD Downloads vs Target %</td>
+              <td>KPI</td><td>Both</td>
+              <td>Console + BQ Targets</td>
+              <td><span class="feasibility-badge feas-auto">Auto</span></td>
+              <td style="color:var(--accent-green)">Day 3</td>
+            </tr>
+            <tr>
+              <td style="font-weight:500;color:var(--text-primary)">YoY Download Comparison</td>
+              <td>KPI</td><td>Both</td>
+              <td>Console (prior year)</td>
+              <td><span class="feasibility-badge feas-auto">Auto</span></td>
+              <td style="color:var(--accent-green)">Day 3</td>
+            </tr>
+            <tr>
+              <td style="font-weight:500;color:var(--text-primary)">Weekly FTD Bar Chart (CY, LY, Target)</td>
+              <td>Chart</td><td>Both</td>
+              <td>Console + BQ Targets</td>
+              <td><span class="feasibility-badge feas-auto">Auto</span></td>
+              <td style="color:var(--accent-green)">Day 3-4</td>
+            </tr>
+            <tr>
+              <td style="font-weight:500;color:var(--text-primary)">Search Impressions / Search CVR</td>
+              <td>KPI</td><td>Both</td>
+              <td>App Store Connect → BigQuery</td>
+              <td><span class="feasibility-badge feas-auto">Auto</span></td>
+              <td style="color:var(--accent-green)">Day 4</td>
+            </tr>
+            <tr>
+              <td style="font-weight:500;color:var(--text-primary)">Browse Impressions / Browse CVR</td>
+              <td>KPI</td><td>Scan, Reader</td>
+              <td>App Store Connect → BigQuery</td>
+              <td><span class="feasibility-badge feas-auto">Auto</span></td>
+              <td style="color:var(--accent-green)">Day 4</td>
+            </tr>
+            <tr>
+              <td style="font-weight:500;color:var(--text-primary)">SL Visitors / Installers / CVR (Android)</td>
+              <td>KPI</td><td>Both</td>
+              <td>Google Play Console → BigQuery</td>
+              <td><span class="feasibility-badge feas-auto">Auto</span></td>
+              <td style="color:var(--accent-green)">Day 4</td>
+            </tr>
+            <tr><td colspan="6" style="font-weight:700;color:var(--accent-yellow);background:rgba(245,158,11,0.06);text-transform:uppercase;font-size:11px;letter-spacing:1px">Keywords</td></tr>
+            <tr>
+              <td style="font-weight:500;color:var(--text-primary)">VIP keyword ranking positions (#1-10+)</td>
+              <td>Rankings</td><td>Scan, Reader</td>
+              <td>AppTweak → BigQuery</td>
+              <td><span class="feasibility-badge feas-auto">Auto</span></td>
+              <td style="color:var(--accent-green)">Day 4</td>
+            </tr>
+            <tr>
+              <td style="font-weight:500;color:var(--text-primary)">Starred keywords by market</td>
+              <td>Rankings</td><td>Scan, Reader</td>
+              <td>AppTweak → BigQuery</td>
+              <td><span class="feasibility-badge feas-auto">Auto</span></td>
+              <td style="color:var(--accent-green)">Day 4</td>
+            </tr>
+            <tr>
+              <td style="font-weight:500;color:var(--text-primary)">Search Popularity (SP) trends</td>
+              <td>Volume</td><td>Scan, Reader</td>
+              <td>AppTweak → BigQuery</td>
+              <td><span class="feasibility-badge feas-auto">Auto</span></td>
+              <td style="color:var(--accent-yellow)">Stretch</td>
+            </tr>
+            <tr>
+              <td style="font-weight:500;color:var(--text-primary)">Title/subtitle changes and impact</td>
+              <td>Metadata</td><td>Scan, Reader</td>
+              <td>AppTweak / manual</td>
+              <td><span class="feasibility-badge feas-semi">Semi-Auto</span></td>
+              <td style="color:var(--text-muted)">Phase 2</td>
+            </tr>
+            <tr>
+              <td style="font-weight:500;color:var(--text-primary)">Competitor keyword displacement</td>
+              <td>Competitive</td><td>Scan</td>
+              <td>AppTweak / Sensor Tower</td>
+              <td><span class="feasibility-badge feas-semi">Semi-Auto</span></td>
+              <td style="color:var(--text-muted)">Phase 2</td>
+            </tr>
+            <tr><td colspan="6" style="font-weight:700;color:var(--accent-green);background:rgba(34,197,94,0.06);text-transform:uppercase;font-size:11px;letter-spacing:1px">Events &amp; Campaigns</td></tr>
+            <tr>
+              <td style="font-weight:500;color:var(--text-primary)">IAE impressions, downloads, CVR by country</td>
+              <td>Events</td><td>Scan, Reader</td>
+              <td>App Store Connect → BigQuery</td>
+              <td><span class="feasibility-badge feas-auto">Auto</span></td>
+              <td style="color:var(--accent-yellow)">Stretch</td>
+            </tr>
+            <tr>
+              <td style="font-weight:500;color:var(--text-primary)">PCE impressions, installs, viewers by country</td>
+              <td>Events</td><td>Scan, Reader</td>
+              <td>Google Play Console → BigQuery</td>
+              <td><span class="feasibility-badge feas-auto">Auto</span></td>
+              <td style="color:var(--accent-yellow)">Stretch</td>
+            </tr>
+            <tr>
+              <td style="font-weight:500;color:var(--text-primary)">Black Friday / New Year campaign results</td>
+              <td>Campaign</td><td>Scan</td>
+              <td>Console + manual</td>
+              <td><span class="feasibility-badge feas-semi">Semi-Auto</span></td>
+              <td style="color:var(--text-muted)">Phase 2</td>
+            </tr>
+            <tr>
+              <td style="font-weight:500;color:var(--text-primary)">ASA / GAC campaign status tables</td>
+              <td>Paid</td><td>Reader</td>
+              <td>Spreadsheet (moving to DB)</td>
+              <td><span class="feasibility-badge feas-auto">Auto</span></td>
+              <td style="color:var(--accent-green)">Day 1</td>
+            </tr>
+            <tr><td colspan="6" style="font-weight:700;color:var(--accent-purple);background:rgba(139,92,246,0.06);text-transform:uppercase;font-size:11px;letter-spacing:1px">Experiments</td></tr>
+            <tr>
+              <td style="font-weight:500;color:var(--text-primary)">Experiment name, status, duration</td>
+              <td>Tracking</td><td>Both</td>
+              <td>PressPlay / BigQuery</td>
+              <td><span class="feasibility-badge feas-auto">Auto</span></td>
+              <td style="color:var(--accent-yellow)">Stretch</td>
+            </tr>
+            <tr>
+              <td style="font-weight:500;color:var(--text-primary)">Audience segmentation (Personal/Prof/Student)</td>
+              <td>Config</td><td>Scan, Reader</td>
+              <td>PressPlay / BigQuery</td>
+              <td><span class="feasibility-badge feas-auto">Auto</span></td>
+              <td style="color:var(--accent-yellow)">Stretch</td>
+            </tr>
+            <tr>
+              <td style="font-weight:500;color:var(--text-primary)">Statistical significance % &amp; uplift %</td>
+              <td>Results</td><td>Both</td>
+              <td>PressPlay / calculated</td>
+              <td><span class="feasibility-badge feas-auto">Auto</span></td>
+              <td style="color:var(--accent-yellow)">Stretch</td>
+            </tr>
+            <tr>
+              <td style="font-weight:500;color:var(--text-primary)">Screenshot variants (V1/V2/V3 images)</td>
+              <td>Creative</td><td>Scan, Reader</td>
+              <td>Manual upload to asset library</td>
+              <td><span class="feasibility-badge feas-manual">Upload</span></td>
+              <td style="color:var(--text-muted)">Phase 2</td>
+            </tr>
+            <tr><td colspan="6" style="font-weight:700;color:var(--accent-purple);background:rgba(139,92,246,0.06);text-transform:uppercase;font-size:11px;letter-spacing:1px">AI-Generated Narrative (drafted by Claude, reviewed by human)</td></tr>
+            <tr>
+              <td style="font-weight:500;color:var(--text-primary)">Key learnings &amp; insights commentary</td>
+              <td>Narrative</td><td>Both</td>
+              <td>AI first draft + human revision</td>
+              <td><span class="feasibility-badge feas-semi">AI + Review</span></td>
+              <td style="color:var(--accent-yellow)">Stretch</td>
+            </tr>
+            <tr>
+              <td style="font-weight:500;color:var(--text-primary)">Next steps &amp; recommendations</td>
+              <td>Strategy</td><td>Both</td>
+              <td>AI first draft + human revision</td>
+              <td><span class="feasibility-badge feas-semi">AI + Review</span></td>
+              <td style="color:var(--text-muted)">Phase 2</td>
+            </tr>
+            <tr>
+              <td style="font-weight:500;color:var(--text-primary)">Executive summary</td>
+              <td>Narrative</td><td>Both</td>
+              <td>AI analysis of period data</td>
+              <td><span class="feasibility-badge feas-semi">AI + Review</span></td>
+              <td style="color:var(--accent-yellow)">Stretch</td>
+            </tr>
+            <tr>
+              <td style="font-weight:500;color:var(--text-primary)">Experiment hypothesis commentary</td>
+              <td>Strategy</td><td>Scan, Reader</td>
+              <td>AI draft from experiment context</td>
+              <td><span class="feasibility-badge feas-semi">AI + Review</span></td>
+              <td style="color:var(--text-muted)">Phase 2</td>
+            </tr>
+            <tr><td colspan="6" style="font-weight:700;color:var(--adobe-red);background:rgba(232,53,45,0.06);text-transform:uppercase;font-size:11px;letter-spacing:1px">Static / Config &amp; Manual</td></tr>
+            <tr>
+              <td style="font-weight:500;color:var(--text-primary)">Title slide, product name, FY/quarter</td>
+              <td>Template</td><td>Both</td>
+              <td>Context layer config</td>
+              <td><span class="feasibility-badge feas-auto">Auto</span></td>
+              <td style="color:var(--accent-green)">Day 3</td>
+            </tr>
+            <tr>
+              <td style="font-weight:500;color:var(--text-primary)">Managed Locales (P0/P1/P2 breakdown)</td>
+              <td>Config</td><td>Both</td>
+              <td>Context layer config</td>
+              <td><span class="feasibility-badge feas-auto">Auto</span></td>
+              <td style="color:var(--accent-green)">Day 2</td>
+            </tr>
+            <tr>
+              <td style="font-weight:500;color:var(--text-primary)">Glossary of terms</td>
+              <td>Config</td><td>Both</td>
+              <td>Context layer config</td>
+              <td><span class="feasibility-badge feas-auto">Auto</span></td>
+              <td style="color:var(--accent-green)">Day 2</td>
+            </tr>
+            <tr>
+              <td style="font-weight:500;color:var(--text-primary)">Industry updates / platform news</td>
+              <td>News</td><td>Scan</td>
+              <td>Curated / manual</td>
+              <td><span class="feasibility-badge feas-manual">Manual</span></td>
+              <td style="color:var(--text-muted)">Phase 2</td>
+            </tr>
+            <tr>
+              <td style="font-weight:500;color:var(--text-primary)">App store listing screenshots</td>
+              <td>Visual</td><td>Scan, Reader</td>
+              <td>Playwright / manual</td>
+              <td><span class="feasibility-badge feas-semi">Semi-Auto</span></td>
+              <td style="color:var(--text-muted)">Phase 2</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="stats-row" style="margin-top:24px">
+        <div class="stat-card">
+          <div class="stat-value" style="color:var(--accent-green)">19</div>
+          <div class="stat-label">Fully Auto</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" style="color:var(--accent-purple)">4</div>
+          <div class="stat-label">AI + Human Review</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" style="color:var(--accent-yellow)">4</div>
+          <div class="stat-label">Semi-Auto</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" style="color:var(--adobe-red)">3</div>
+          <div class="stat-label">Manual / Upload</div>
+        </div>
+      </div>
+      <p style="margin-top:16px">Performance metrics, FTD data, rankings, CVR calculations, and campaign status tables are fully automatable from existing APIs and spreadsheets. Key learnings, insights, and recommendations get AI-generated first drafts with human review. Only industry news and screenshots still need fully manual input.</p>
+    </div>
+
+    <!-- Hardest to Automate -->
+    <div class="section">
+      <h4>Creative Workarounds</h4>
+      <h2>Solving the Hard Parts</h2>
+      <div class="card-grid card-grid-2">
+        <div class="card">
+          <h3>App Store Screenshots</h3>
+          <p style="font-size:13px;margin-bottom:8px">Current: manually taken and inserted. Appears in experiment results and market-specific updates.</p>
+          <p style="font-size:13px;color:var(--phiture-teal)"><strong>Solution:</strong> Playwright headless browser to capture app store listings programmatically. Schedule nightly for key markets. Fallback: AppTweak may provide screenshot endpoints.</p>
+        </div>
+        <div class="card">
+          <h3>Experiment Creative Variants</h3>
+          <p style="font-size:13px;margin-bottom:8px">Current: V1/V2/V3 screenshot images manually placed on slides. Shown with audience segmentation data.</p>
+          <p style="font-size:13px;color:var(--phiture-teal)"><strong>Solution:</strong> Build an asset library (S3/GCS) where creative team uploads variants tagged by experiment ID. Pipeline pulls matching images automatically.</p>
+        </div>
+        <div class="card">
+          <h3>Strategic Commentary</h3>
+          <p style="font-size:13px;margin-bottom:8px">Current: consultant writes 3-5 bullet points of learnings and next steps. Requires domain expertise.</p>
+          <p style="font-size:13px;color:var(--phiture-teal)"><strong>Solution:</strong> AI drafts initial commentary from data trends. Consultant reviews and edits via a simple web form before deck generation.</p>
+        </div>
+        <div class="card">
+          <h3>Campaign Planning Tables</h3>
+          <p style="font-size:13px;margin-bottom:8px">Current: manually maintained in slides with ASA/GAC campaign concepts, markets, and status.</p>
+          <p style="font-size:13px;color:var(--phiture-teal)"><strong>Solution:</strong> If structured in Asana/Notion, pull via API. Otherwise, maintain as a structured spreadsheet/BQ table that feeds into the deck.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Format Decision -->
+    <div class="section">
+      <h4>Key Decision</h4>
+      <h2>PowerPoint vs Web vs Hybrid</h2>
+      <div class="table-wrap" style="margin-bottom:24px">
+        <table class="compare-table">
+          <thead>
+            <tr><th>Factor</th><th>PowerPoint (python-pptx)</th><th>Web-Based</th><th>Hybrid</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="font-weight:600;color:var(--text-primary)">Adobe Familiarity</td>
+              <td style="color:var(--accent-green)">High - they expect PPT</td>
+              <td style="color:var(--accent-yellow)">Learning curve</td>
+              <td style="color:var(--accent-green)">Best of both</td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;color:var(--text-primary)">Offline Access</td>
+              <td style="color:var(--accent-green)">Yes - portable file</td>
+              <td style="color:var(--adobe-red)">No - needs internet</td>
+              <td style="color:var(--accent-green)">Export capability</td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;color:var(--text-primary)">Interactivity</td>
+              <td style="color:var(--adobe-red)">None - static slides</td>
+              <td style="color:var(--accent-green)">Full drill-down</td>
+              <td style="color:var(--accent-yellow)">Limited</td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;color:var(--text-primary)">Data Freshness</td>
+              <td style="color:var(--accent-yellow)">Point-in-time snapshot</td>
+              <td style="color:var(--accent-green)">Always live</td>
+              <td style="color:var(--accent-green)">Snapshot + live link</td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;color:var(--text-primary)">AI Narratives</td>
+              <td style="color:var(--accent-yellow)">Static text only</td>
+              <td style="color:var(--accent-green)">Dynamic, updatable</td>
+              <td style="color:var(--accent-green)">Both options</td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;color:var(--text-primary)">Build Effort</td>
+              <td style="color:var(--accent-green)">Medium</td>
+              <td style="color:var(--adobe-red)">High</td>
+              <td style="color:var(--accent-yellow)">High</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card" style="border-left:4px solid var(--phiture-teal)">
+        <h3><span class="rec-badge">RECOMMENDED</span> &nbsp; Start PowerPoint, Build Toward Hybrid</h3>
+        <p style="font-size:14px;margin-top:8px">Phase 1 (Hackathon): Generate PPTX files using python-pptx. Adobe gets what they expect, team sees immediate value.<br>Phase 2 (Month 1-2): Add a web companion - same data, interactive version with a "Download as PPT" button. Best of both worlds.</p>
+      </div>
+    </div>
+
+    <!-- Data Snapshot Strategy -->
+    <div class="section">
+      <h4>Point-in-Time Snapshots</h4>
+      <h2>Freezing Data for Each Period</h2>
+      <p style="margin-bottom:20px">Every bi-weekly deck represents a frozen moment. We need to ensure the data used is reproducible and auditable.</p>
+      <div class="card-grid card-grid-2">
+        <div class="card">
+          <h3>Snapshot Strategy</h3>
+          <ul class="checklist">
+            <li><span class="check-icon" style="color:var(--accent-blue)">-</span> BigQuery scheduled queries snapshot metrics at end of each bi-weekly period</li>
+            <li><span class="check-icon" style="color:var(--accent-blue)">-</span> Snapshots stored in <code style="background:rgba(255,255,255,0.08);padding:2px 6px;border-radius:4px;font-size:12px">snapshots.aso_biweekly_YYYYWW</code> tables</li>
+            <li><span class="check-icon" style="color:var(--accent-blue)">-</span> Each deck generation logs which snapshot was used</li>
+            <li><span class="check-icon" style="color:var(--accent-blue)">-</span> Can regenerate any past deck from its snapshot</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Versioned Outputs</h3>
+          <ul class="checklist">
+            <li><span class="check-icon" style="color:var(--accent-purple)">-</span> Naming: <code style="background:rgba(255,255,255,0.08);padding:2px 6px;border-radius:4px;font-size:12px">DC_BiWeekly_FY26Q2_W13-14.pptx</code></li>
+            <li><span class="check-icon" style="color:var(--accent-purple)">-</span> Stored in GCS with version history</li>
+            <li><span class="check-icon" style="color:var(--accent-purple)">-</span> Diff view: what changed from last period's deck</li>
+            <li><span class="check-icon" style="color:var(--accent-purple)">-</span> Audit trail: who added manual commentary, when</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    </div>
+
+    <!-- ===== MVP HACKATHON BRIEF ===== -->
+    <div style="border-top:2px solid var(--border);margin:48px 0 0 0;padding-top:48px">
+    <div class="section">
+      <h4>HACKATHON - WEEK OF MARCH 23, 2026</h4>
+      <h2>MVP Build Plan</h2>
+      <p style="margin-bottom:20px">With the audit complete, here's what we build in one week. The goal: an end-to-end pipeline that takes data from BigQuery and produces a branded PPTX deck with AI-generated narrative.</p>
+    </div>
+
+    <!-- ===== SCOPE ===== -->
+    <div class="section">
+      <h4>Hackathon Scope</h4>
+      <div class="two-col">
+        <div class="scope-box scope-in">
+          <h3><span style="color:var(--accent-green)">✓</span> In Scope</h3>
+          <ul class="checklist">
+            <li><span class="check-icon" style="color:var(--accent-green)">●</span> Audit and document all BigQuery tables needed for decks</li>
+            <li><span class="check-icon" style="color:var(--accent-green)">●</span> Build context layer (fiscal weeks, market tiers, metrics, products)</li>
+            <li><span class="check-icon" style="color:var(--accent-green)">●</span> Auto-generate performance recap slides (FTD charts, YTD tables)</li>
+            <li><span class="check-icon" style="color:var(--accent-green)">●</span> Auto-generate keyword ranking slides from AppTweak data</li>
+            <li><span class="check-icon" style="color:var(--accent-green)">●</span> Auto-generate IAE/PCE event results slides</li>
+            <li><span class="check-icon" style="color:var(--accent-green)">●</span> AI-drafted narrative and commentary (Claude)</li>
+            <li><span class="check-icon" style="color:var(--accent-green)">●</span> End-to-end pipeline: data → context → slides → PPTX output</li>
+          </ul>
+        </div>
+        <div class="scope-box scope-out">
+          <h3><span style="color:var(--adobe-red)">✕</span> Out of Scope (Phase 2+)</h3>
+          <ul class="checklist">
+            <li><span class="check-icon" style="color:var(--adobe-red)">●</span> Custom interactive dashboards</li>
+            <li><span class="check-icon" style="color:var(--adobe-red)">●</span> Proactive alert system / anomaly detection</li>
+            <li><span class="check-icon" style="color:var(--adobe-red)">●</span> Conversational AI interface</li>
+            <li><span class="check-icon" style="color:var(--adobe-red)">●</span> Automated app store screenshots (Playwright)</li>
+            <li><span class="check-icon" style="color:var(--adobe-red)">●</span> Sensor Tower deep integration (rate limited)</li>
+            <li><span class="check-icon" style="color:var(--adobe-red)">●</span> Multi-client / productized framework</li>
+            <li><span class="check-icon" style="color:var(--adobe-red)">●</span> Full agent orchestration system</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== END-TO-END PIPELINE ===== -->
+    <div class="section">
+      <h4>Technical Pipeline</h4>
+      <h2>End-to-End Automation Workflow</h2>
+      <div class="workflow" style="margin-bottom:32px">
+        <div class="workflow-step">
+          <div class="step-num">1</div>
+          <div class="step-title">Data Pull</div>
+          <div class="step-desc">BigQuery SQL<br>templates for<br>bi-weekly period</div>
+        </div>
+        <div class="workflow-arrow">-</div>
+        <div class="workflow-step">
+          <div class="step-num">2</div>
+          <div class="step-title">Context</div>
+          <div class="step-desc">Apply fiscal weeks,<br>market tiers,<br>vs Target/YoY</div>
+        </div>
+        <div class="workflow-arrow">-</div>
+        <div class="workflow-step">
+          <div class="step-num">3</div>
+          <div class="step-title">Charts</div>
+          <div class="step-desc">matplotlib generates<br>FTD bar charts,<br>keyword tables</div>
+        </div>
+        <div class="workflow-arrow">-</div>
+        <div class="workflow-step">
+          <div class="step-num">4</div>
+          <div class="step-title">Template</div>
+          <div class="step-desc">python-pptx fills<br>branded Phiture<br>slide template</div>
+        </div>
+        <div class="workflow-arrow">-</div>
+        <div class="workflow-step">
+          <div class="step-num">5</div>
+          <div class="step-title">AI Narrative</div>
+          <div class="step-desc">Claude drafts<br>summary &amp;<br>insights text</div>
+        </div>
+        <div class="workflow-arrow">-</div>
+        <div class="workflow-step">
+          <div class="step-num">6</div>
+          <div class="step-title">Human Review</div>
+          <div class="step-desc">Consultant edits<br>commentary via<br>web form</div>
+        </div>
+        <div class="workflow-arrow">-</div>
+        <div class="workflow-step" style="border-color:var(--accent-green)">
+          <div class="step-num" style="color:var(--accent-green)">OUTPUT</div>
+          <div class="step-title">.pptx</div>
+          <div class="step-desc">Versioned deck<br>ready for Adobe</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== CONSULTANT REVIEW INTERFACE ===== -->
+    <div class="section">
+      <h4>Human-in-the-Loop</h4>
+      <h2>Consultant Review Interface</h2>
+      <p style="margin-bottom:20px">After the pipeline generates a draft deck, consultants review each slide in a web interface with an AI assistant. Chat with Claude to refine commentary, adjust data framing, or request changes - then export the final PPTX.</p>
+
+      <!-- Review Interface Mockup -->
+      <div style="border:1px solid var(--border);border-radius:16px;overflow:hidden;background:var(--bg-primary)">
+
+        <!-- Top toolbar -->
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 20px;background:var(--bg-secondary);border-bottom:1px solid var(--border)">
+          <div style="display:flex;align-items:center;gap:12px">
+            <div style="font-size:14px;font-weight:700;color:var(--text-primary)">Scan Bi-Weekly</div>
+            <div style="font-size:11px;color:var(--text-muted);padding:4px 10px;background:rgba(255,255,255,0.06);border-radius:4px">FY26 Q2 - Weeks 13-14</div>
+            <div style="font-size:11px;color:var(--accent-green);padding:4px 10px;background:rgba(34,197,94,0.1);border-radius:4px">AI Draft Ready</div>
+          </div>
+          <div style="display:flex;gap:8px">
+            <div style="padding:6px 14px;background:var(--bg-primary);border:1px solid var(--border);color:var(--text-secondary);border-radius:6px;font-size:12px;font-weight:600;cursor:pointer">Preview All</div>
+            <div style="padding:6px 14px;background:var(--phiture-teal);color:#fff;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer">Export PPTX</div>
+          </div>
+        </div>
+
+        <!-- Main content: slide panel + chat -->
+        <div style="display:grid;grid-template-columns:220px 1fr 340px;min-height:480px">
+
+          <!-- Left: Slide thumbnails -->
+          <div style="border-right:1px solid var(--border);padding:12px;overflow-y:auto;background:rgba(0,0,0,0.15)">
+            <div style="font-size:10px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;padding:0 4px">Slides (42)</div>
+
+            <div style="padding:6px;border-radius:6px;margin-bottom:6px;cursor:pointer;opacity:0.5">
+              <div style="background:var(--bg-secondary);border-radius:4px;padding:12px 8px;text-align:center;border:1px solid var(--border)">
+                <div style="font-size:9px;font-weight:700;color:var(--phiture-teal)">SLIDE 1</div>
+                <div style="font-size:10px;color:var(--text-muted);margin-top:2px">Title Slide</div>
+              </div>
+              <div style="display:flex;align-items:center;gap:4px;margin-top:4px;padding:0 2px">
+                <div style="width:6px;height:6px;border-radius:50%;background:var(--accent-green)"></div>
+                <span style="font-size:9px;color:var(--text-muted)">Auto - no review needed</span>
+              </div>
+            </div>
+
+            <div style="padding:6px;border-radius:6px;margin-bottom:6px;cursor:pointer;opacity:0.5">
+              <div style="background:var(--bg-secondary);border-radius:4px;padding:12px 8px;text-align:center;border:1px solid var(--border)">
+                <div style="font-size:9px;font-weight:700;color:var(--phiture-teal)">SLIDE 2-3</div>
+                <div style="font-size:10px;color:var(--text-muted);margin-top:2px">Locales + Glossary</div>
+              </div>
+              <div style="display:flex;align-items:center;gap:4px;margin-top:4px;padding:0 2px">
+                <div style="width:6px;height:6px;border-radius:50%;background:var(--accent-green)"></div>
+                <span style="font-size:9px;color:var(--text-muted)">Auto - config slides</span>
+              </div>
+            </div>
+
+            <div style="padding:6px;border-radius:6px;margin-bottom:6px;cursor:pointer;opacity:0.5">
+              <div style="background:var(--bg-secondary);border-radius:4px;padding:12px 8px;text-align:center;border:1px solid var(--border)">
+                <div style="font-size:9px;font-weight:700;color:var(--accent-blue)">SLIDE 4-5</div>
+                <div style="font-size:10px;color:var(--text-muted);margin-top:2px">Performance Recap</div>
+              </div>
+              <div style="display:flex;align-items:center;gap:4px;margin-top:4px;padding:0 2px">
+                <div style="width:6px;height:6px;border-radius:50%;background:var(--accent-green)"></div>
+                <span style="font-size:9px;color:var(--text-muted)">Auto - data + charts</span>
+              </div>
+            </div>
+
+            <div style="padding:6px;border-radius:8px;margin-bottom:6px;cursor:pointer;background:rgba(0,180,170,0.1);border:1px solid rgba(0,180,170,0.3)">
+              <div style="background:var(--bg-secondary);border-radius:4px;padding:12px 8px;text-align:center;border:1px solid var(--phiture-teal)">
+                <div style="font-size:9px;font-weight:700;color:var(--accent-purple)">SLIDE 6</div>
+                <div style="font-size:10px;color:var(--text-primary);font-weight:600;margin-top:2px">Key Learnings</div>
+              </div>
+              <div style="display:flex;align-items:center;gap:4px;margin-top:4px;padding:0 2px">
+                <div style="width:6px;height:6px;border-radius:50%;background:var(--accent-purple)"></div>
+                <span style="font-size:9px;color:var(--accent-purple);font-weight:600">AI Draft - needs review</span>
+              </div>
+            </div>
+
+            <div style="padding:6px;border-radius:6px;margin-bottom:6px;cursor:pointer;opacity:0.5">
+              <div style="background:var(--bg-secondary);border-radius:4px;padding:12px 8px;text-align:center;border:1px solid var(--border)">
+                <div style="font-size:9px;font-weight:700;color:var(--accent-yellow)">SLIDE 7-12</div>
+                <div style="font-size:10px;color:var(--text-muted);margin-top:2px">Keywords</div>
+              </div>
+              <div style="display:flex;align-items:center;gap:4px;margin-top:4px;padding:0 2px">
+                <div style="width:6px;height:6px;border-radius:50%;background:var(--accent-green)"></div>
+                <span style="font-size:9px;color:var(--text-muted)">Auto - AppTweak data</span>
+              </div>
+            </div>
+
+            <div style="padding:6px;border-radius:6px;margin-bottom:6px;cursor:pointer;opacity:0.5">
+              <div style="background:var(--bg-secondary);border-radius:4px;padding:12px 8px;text-align:center;border:1px solid var(--border)">
+                <div style="font-size:9px;font-weight:700;color:var(--accent-purple)">SLIDE 13</div>
+                <div style="font-size:10px;color:var(--text-muted);margin-top:2px">Next Steps</div>
+              </div>
+              <div style="display:flex;align-items:center;gap:4px;margin-top:4px;padding:0 2px">
+                <div style="width:6px;height:6px;border-radius:50%;background:var(--accent-purple)"></div>
+                <span style="font-size:9px;color:var(--text-muted)">AI Draft - needs review</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Center: Active slide preview -->
+          <div style="padding:24px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(0,0,0,0.08)">
+            <div style="width:100%;max-width:520px;background:white;border-radius:4px;padding:32px 28px;box-shadow:0 4px 24px rgba(0,0,0,0.3)">
+              <div style="font-size:8px;font-weight:700;color:#666;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Adobe Scan - Bi-Weekly Update</div>
+              <div style="font-size:16px;font-weight:800;color:#1a1a2e;margin-bottom:16px">Key Learnings &amp; Insights</div>
+              <div style="font-size:10px;color:#333;line-height:1.8">
+                <div style="display:flex;gap:8px;margin-bottom:8px;padding:6px 8px;background:rgba(139,92,246,0.08);border-radius:4px;border-left:3px solid #8B5CF6">
+                  <span style="font-weight:700;color:#8B5CF6;flex-shrink:0">1.</span>
+                  <span>Feature screenshot experiment showed <strong>8.2% uplift</strong> for "AI-powered" messaging variant across US and DE markets. Confidence level 96%.</span>
+                </div>
+                <div style="display:flex;gap:8px;margin-bottom:8px;padding:6px 8px;background:rgba(139,92,246,0.08);border-radius:4px;border-left:3px solid #8B5CF6">
+                  <span style="font-weight:700;color:#8B5CF6;flex-shrink:0">2.</span>
+                  <span>New Year IAE campaign drove <strong>436K impressions</strong> in JP market with 3.2% CVR - highest event performance this quarter.</span>
+                </div>
+                <div style="display:flex;gap:8px;margin-bottom:8px;padding:6px 8px;background:rgba(232,53,45,0.08);border-radius:4px;border-left:3px solid #E8352D">
+                  <span style="font-weight:700;color:#E8352D;flex-shrink:0">3.</span>
+                  <span>"scanner" keyword dropped from #1 to #3 in US - CamScanner gained positions with recent app update.</span>
+                </div>
+                <div style="display:flex;gap:8px;padding:6px 8px;background:rgba(59,130,246,0.08);border-radius:4px;border-left:3px solid #3B82F6">
+                  <span style="font-weight:700;color:#3B82F6;flex-shrink:0">4.</span>
+                  <span>Android SL CVR improved <strong>+2.1pp</strong> after Q1 store listing refresh - validating metadata optimization strategy.</span>
+                </div>
+              </div>
+              <div style="margin-top:12px;padding-top:8px;border-top:1px solid #eee;font-size:8px;color:#999;display:flex;justify-content:space-between">
+                <span>AI-generated draft - pending consultant review</span>
+                <span style="color:#8B5CF6;font-weight:600">Slide 6 of 42</span>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:16px;margin-top:16px">
+              <div style="padding:6px 12px;background:var(--bg-secondary);border:1px solid var(--border);border-radius:6px;font-size:11px;color:var(--text-muted);cursor:pointer">&#8592; Prev</div>
+              <div style="font-size:11px;color:var(--text-muted)">Slide 6 of 42</div>
+              <div style="padding:6px 12px;background:var(--bg-secondary);border:1px solid var(--border);border-radius:6px;font-size:11px;color:var(--text-muted);cursor:pointer">Next &#8594;</div>
+            </div>
+          </div>
+
+          <!-- Right: Chat panel -->
+          <div style="border-left:1px solid var(--border);display:flex;flex-direction:column;background:rgba(0,0,0,0.1)">
+            <div style="padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px">
+              <div style="width:24px;height:24px;border-radius:6px;background:var(--phiture-teal);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:white">AI</div>
+              <div>
+                <div style="font-size:12px;font-weight:600;color:var(--text-primary)">Claude Assistant</div>
+                <div style="font-size:10px;color:var(--text-muted)">Has context for this slide's data</div>
+              </div>
+            </div>
+
+            <div style="flex:1;overflow-y:auto;padding:12px 16px;display:flex;flex-direction:column;gap:12px">
+              <!-- AI message -->
+              <div style="display:flex;gap:8px">
+                <div style="width:22px;height:22px;border-radius:5px;background:var(--phiture-teal);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:white;flex-shrink:0;margin-top:2px">AI</div>
+                <div style="background:var(--bg-secondary);border:1px solid var(--border);border-radius:10px;border-top-left-radius:2px;padding:10px 12px;font-size:12px;color:var(--text-secondary);line-height:1.6">
+                  I've drafted 4 key learnings based on the data from weeks 13-14. The main highlights are the screenshot experiment uplift, JP IAE performance, the US "scanner" keyword drop, and the Android CVR improvement. Want me to adjust any of these?
+                </div>
+              </div>
+
+              <!-- User message -->
+              <div style="display:flex;gap:8px;flex-direction:row-reverse">
+                <div style="width:22px;height:22px;border-radius:5px;background:var(--accent-blue);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:white;flex-shrink:0;margin-top:2px">O</div>
+                <div style="background:rgba(59,130,246,0.15);border:1px solid rgba(59,130,246,0.25);border-radius:10px;border-top-right-radius:2px;padding:10px 12px;font-size:12px;color:var(--text-primary);line-height:1.6">
+                  Point 3 about the keyword drop - can you add that we think it's related to CamScanner's new AI features launch? Also make it sound less alarming, we're already working on a response.
+                </div>
+              </div>
+
+              <!-- AI response -->
+              <div style="display:flex;gap:8px">
+                <div style="width:22px;height:22px;border-radius:5px;background:var(--phiture-teal);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:white;flex-shrink:0;margin-top:2px">AI</div>
+                <div style="background:var(--bg-secondary);border:1px solid var(--border);border-radius:10px;border-top-left-radius:2px;padding:10px 12px;font-size:12px;color:var(--text-secondary);line-height:1.6">
+                  Updated. I've reframed point 3 to note the CamScanner AI features launch as the likely cause and added that a metadata optimization response is already in progress for weeks 15-16. The slide preview on the left has been updated.
+                  <div style="margin-top:8px;padding:8px 10px;background:rgba(0,180,170,0.1);border-radius:6px;border:1px solid rgba(0,180,170,0.2);font-size:11px">
+                    <strong style="color:var(--phiture-teal)">Updated text:</strong><br>
+                    <span style="color:var(--text-primary)">"scanner" moved from #1 to #3 in US following CamScanner's AI features launch. Metadata optimization response planned for weeks 15-16.</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- User message -->
+              <div style="display:flex;gap:8px;flex-direction:row-reverse">
+                <div style="width:22px;height:22px;border-radius:5px;background:var(--accent-blue);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:white;flex-shrink:0;margin-top:2px">O</div>
+                <div style="background:rgba(59,130,246,0.15);border:1px solid rgba(59,130,246,0.25);border-radius:10px;border-top-right-radius:2px;padding:10px 12px;font-size:12px;color:var(--text-primary);line-height:1.6">
+                  Perfect. Approve this slide.
+                </div>
+              </div>
+
+              <!-- AI confirmation -->
+              <div style="display:flex;gap:8px">
+                <div style="width:22px;height:22px;border-radius:5px;background:var(--phiture-teal);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:white;flex-shrink:0;margin-top:2px">AI</div>
+                <div style="background:var(--bg-secondary);border:1px solid var(--border);border-radius:10px;border-top-left-radius:2px;padding:10px 12px;font-size:12px;color:var(--text-secondary);line-height:1.6">
+                  <span style="color:var(--accent-green)">&#10003; Slide 6 approved.</span> Moving to the next slide that needs review: <strong>Slide 13 - Next Steps &amp; Recommendations</strong>. All other slides are auto-generated and don't require review. Want to jump there?
+                </div>
+              </div>
+            </div>
+
+            <!-- Chat input -->
+            <div style="padding:12px 16px;border-top:1px solid var(--border)">
+              <div style="display:flex;gap:8px;align-items:center">
+                <div style="flex:1;padding:10px 14px;background:var(--bg-secondary);border:1px solid var(--border);border-radius:8px;font-size:12px;color:var(--text-muted)">Ask Claude to revise this slide...</div>
+                <div style="width:32px;height:32px;border-radius:8px;background:var(--phiture-teal);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;color:white;flex-shrink:0">&#8593;</div>
+              </div>
+              <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
+                <div style="padding:4px 10px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:12px;font-size:10px;color:var(--text-muted);cursor:pointer">Make more concise</div>
+                <div style="padding:4px 10px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:12px;font-size:10px;color:var(--text-muted);cursor:pointer">Add data point</div>
+                <div style="padding:4px 10px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:12px;font-size:10px;color:var(--text-muted);cursor:pointer">Change tone</div>
+                <div style="padding:4px 10px;background:rgba(34,197,94,0.15);border:1px solid rgba(34,197,94,0.3);border-radius:12px;font-size:10px;color:var(--accent-green);cursor:pointer;font-weight:600">&#10003; Approve slide</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Bottom status bar -->
+        <div style="padding:10px 20px;background:var(--bg-secondary);border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
+          <div style="display:flex;gap:16px;font-size:11px">
+            <span style="color:var(--accent-green)">&#9679; 38 slides auto-approved</span>
+            <span style="color:var(--accent-purple)">&#9679; 2 slides need review</span>
+            <span style="color:var(--accent-blue)">&#9679; 1 approved with edits</span>
+            <span style="color:var(--text-muted)">&#9679; 1 remaining</span>
+          </div>
+          <div style="font-size:11px;color:var(--text-muted)">Powered by Claude API</div>
+        </div>
+      </div>
+
+      <!-- How it works -->
+      <div class="card-grid card-grid-3" style="margin-top:24px">
+        <div class="card" style="border-top:3px solid var(--accent-green)">
+          <h3>Auto-Approved Slides</h3>
+          <p style="font-size:13px">Data-only slides (charts, tables, rankings) are auto-generated and pre-approved. The consultant can still review them but doesn't need to.</p>
+        </div>
+        <div class="card" style="border-top:3px solid var(--accent-purple)">
+          <h3>AI Draft Slides</h3>
+          <p style="font-size:13px">Narrative slides (learnings, next steps, summaries) get an AI first draft. The consultant reviews and uses Claude to iterate until the framing is right.</p>
+        </div>
+        <div class="card" style="border-top:3px solid var(--phiture-teal)">
+          <h3>Export When Ready</h3>
+          <p style="font-size:13px">Once all review slides are approved, export generates a branded PPTX matching the existing template. Version is logged with an audit trail.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== STEP BY STEP PROCESS ===== -->
+    <div class="section">
+      <h4>Step-by-Step Build Guide</h4>
+      <h2>How to Build This (Using Claude Code)</h2>
+      <p style="margin-bottom:24px">A practical, day-by-day guide for the data analyst building this out. Each step uses Claude Code as a pair-programming partner.</p>
+
+      <div class="card" style="border-left:4px solid var(--accent-blue);margin-bottom:16px">
+        <h3>Day 1: Data Layer Discovery</h3>
+        <p style="font-size:12px;color:var(--accent-blue);font-weight:600;margin-bottom:8px">GOAL: Know exactly what data we have and where it lives</p>
+        <ul class="checklist">
+          <li><span class="check-icon" style="color:var(--accent-blue)">1.1</span> <strong>Clone Merlin's aso-analytics repo</strong> - this already has BigQuery connections and schema catalog</li>
+          <li><span class="check-icon" style="color:var(--accent-blue)">1.2</span> <strong>Use Claude Code to explore BigQuery tables</strong> - ask it to list all tables, describe schemas, identify which ones contain the data points from the table above</li>
+          <li><span class="check-icon" style="color:var(--accent-blue)">1.3</span> <strong>Map data availability</strong> - for each data point above, confirm: is it in BigQuery? What table? What field? What date range? Any gaps?</li>
+          <li><span class="check-icon" style="color:var(--accent-blue)">1.4</span> <strong>Identify legacy tables</strong> - flag anything unused or outdated (e.g., organic vs paid split tables from 2019)</li>
+          <li><span class="check-icon" style="color:var(--accent-blue)">1.5</span> <strong>Document findings</strong> - Claude Code can help generate a schema documentation MD file as you go</li>
+        </ul>
+      </div>
+
+      <div class="card" style="border-left:4px solid var(--accent-purple);margin-bottom:16px">
+        <h3>Day 2: Context Layer Setup</h3>
+        <p style="font-size:12px;color:var(--accent-purple);font-weight:600;margin-bottom:8px">GOAL: Teach the AI system Adobe's business logic</p>
+        <ul class="checklist">
+          <li><span class="check-icon" style="color:var(--accent-purple)">2.1</span> <strong>Create context MD files</strong> in the repo - these are the knowledge base that Claude Code and any future agents will use:
+            <div style="margin-top:8px;padding:12px;background:var(--bg-secondary);border-radius:8px;font-size:12px;font-family:monospace;color:var(--text-muted)">
+              context/<br>
+              &nbsp;&nbsp;fiscal-calendar.md &nbsp;&nbsp;# FY start Dec, fiscal week mapping<br>
+              &nbsp;&nbsp;market-tiers.md &nbsp;&nbsp;&nbsp;&nbsp;# P0/P1/P2 countries<br>
+              &nbsp;&nbsp;products.md &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# Scan, Reader, DC configs<br>
+              &nbsp;&nbsp;metrics.md &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# FTD, CVR, SP definitions<br>
+              &nbsp;&nbsp;glossary.md &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# IAE, PCE, CPP, KWO, etc.<br>
+              &nbsp;&nbsp;targets.md &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# Q2 FY26 quarterly targets
+            </div>
+          </li>
+          <li><span class="check-icon" style="color:var(--accent-purple)">2.2</span> <strong>Build fiscal week calculation</strong> - Python function that maps any date to Adobe fiscal week/quarter. Use Claude Code to write and test this.</li>
+          <li><span class="check-icon" style="color:var(--accent-purple)">2.3</span> <strong>Write SQL query templates</strong> - parameterized queries for each data point (e.g., "get FTDs for product X, fiscal weeks Y-Z, broken by platform")</li>
+          <li><span class="check-icon" style="color:var(--accent-purple)">2.4</span> <strong>Test queries against BigQuery</strong> - validate that the data matches what's currently in the decks</li>
+        </ul>
+      </div>
+
+      <div class="card" style="border-left:4px solid var(--accent-green);margin-bottom:16px">
+        <h3>Day 3: First Slides - Performance Recap</h3>
+        <p style="font-size:12px;color:var(--accent-green);font-weight:600;margin-bottom:8px">GOAL: Auto-generate the highest-value slides that take the most time manually</p>
+        <ul class="checklist">
+          <li><span class="check-icon" style="color:var(--accent-green)">3.1</span> <strong>Install python-pptx</strong> and create a branded slide template matching the Phiture deck format</li>
+          <li><span class="check-icon" style="color:var(--accent-green)">3.2</span> <strong>Build the FTD bar chart generator</strong> - matplotlib chart that matches the existing format: red bars (CY), gray bars (LY), black target line. Use Claude Code to iterate on the styling until it matches.</li>
+          <li><span class="check-icon" style="color:var(--accent-green)">3.3</span> <strong>Build the YTD comparison table</strong> - iOS / Android / Total rows, with vs Target % and vs YoY % columns, color-coded (green up, red down)</li>
+          <li><span class="check-icon" style="color:var(--accent-green)">3.4</span> <strong>Wire it together</strong> - Pull data from BigQuery → apply fiscal week context → generate chart → inject into PPTX template</li>
+          <li><span class="check-icon" style="color:var(--accent-green)">3.5</span> <strong>Compare output to real deck</strong> - open the generated slide next to the manual one. Iterate until they match.</li>
+        </ul>
+      </div>
+
+      <div class="card" style="border-left:4px solid var(--accent-yellow);margin-bottom:16px">
+        <h3>Day 4: Keywords + More Slides</h3>
+        <p style="font-size:12px;color:var(--accent-yellow);font-weight:600;margin-bottom:8px">GOAL: Add keyword ranking slides and additional performance breakdowns</p>
+        <ul class="checklist">
+          <li><span class="check-icon" style="color:var(--accent-yellow)">4.1</span> <strong>Build keyword ranking table slide</strong> - pull VIP and starred keyword data from AppTweak tables in BigQuery. Show rank, delta, search popularity per market.</li>
+          <li><span class="check-icon" style="color:var(--accent-yellow)">4.2</span> <strong>Build search/browse breakdown slides</strong> - impressions, FTDs, CVR for Search vs Browse vs Explore (iOS) and Search vs Explore (Android)</li>
+          <li><span class="check-icon" style="color:var(--accent-yellow)">4.3</span> <strong>Add static config slides</strong> - title, managed locales (P0/P1/P2), glossary. These just pull from context MD files.</li>
+          <li><span class="check-icon" style="color:var(--accent-yellow)">4.4</span> <strong>Stretch: IAE/PCE event results</strong> - if time allows, generate event performance tables by country</li>
+        </ul>
+      </div>
+
+      <div class="card" style="border-left:4px solid var(--phiture-teal);margin-bottom:16px">
+        <h3>Day 5: AI Narrative + Polish + Demo</h3>
+        <p style="font-size:12px;color:var(--phiture-teal);font-weight:600;margin-bottom:8px">GOAL: Add AI-generated analysis and prepare a demo</p>
+        <ul class="checklist">
+          <li><span class="check-icon" style="color:var(--phiture-teal)">5.1</span> <strong>Wire Claude into the pipeline</strong> - after data is pulled, send it to Claude with the context layer to generate: (a) executive summary, (b) key observations, (c) notable trends or anomalies</li>
+          <li><span class="check-icon" style="color:var(--phiture-teal)">5.2</span> <strong>Build the review workflow</strong> - AI draft is saved as editable text. Consultant reviews, edits, then triggers final deck generation.</li>
+          <li><span class="check-icon" style="color:var(--phiture-teal)">5.3</span> <strong>Create the CLI interface</strong>: <code style="background:rgba(255,255,255,0.08);padding:2px 6px;border-radius:4px;font-size:12px">python generate_deck.py --product reader --period 202613-202614</code></li>
+          <li><span class="check-icon" style="color:var(--phiture-teal)">5.4</span> <strong>Run an end-to-end test</strong> - generate a full Reader Bi-Weekly deck and compare side-by-side with the real one</li>
+          <li><span class="check-icon" style="color:var(--phiture-teal)">5.5</span> <strong>Prepare demo</strong> - record a before/after: manual process vs automated. Show the time savings.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ===== DELIVERABLES ===== -->
+    <div class="section">
+      <h4>End of Week</h4>
+      <h2>Hackathon Deliverables</h2>
+      <div class="card-grid card-grid-2">
+        <div class="card" style="border-top:3px solid var(--accent-green)">
+          <h3>Must Have</h3>
+          <ul class="checklist">
+            <li><span class="check-icon" style="color:var(--accent-green)">1</span> Documented BigQuery schema catalog for all Adobe tables</li>
+            <li><span class="check-icon" style="color:var(--accent-green)">2</span> Context layer MD files (fiscal weeks, tiers, products, metrics, glossary)</li>
+            <li><span class="check-icon" style="color:var(--accent-green)">3</span> Working pipeline: BigQuery → charts → PPTX for performance recap slides</li>
+            <li><span class="check-icon" style="color:var(--accent-green)">4</span> At least 5 auto-generated slides that match the existing deck format</li>
+            <li><span class="check-icon" style="color:var(--accent-green)">5</span> CLI tool to trigger deck generation for any product and time period</li>
+          </ul>
+        </div>
+        <div class="card" style="border-top:3px solid var(--accent-yellow)">
+          <h3>Nice to Have</h3>
+          <ul class="checklist">
+            <li><span class="check-icon" style="color:var(--accent-yellow)">6</span> AI-generated executive summary and learnings (Claude integration)</li>
+            <li><span class="check-icon" style="color:var(--accent-yellow)">7</span> Keyword ranking slides from AppTweak data</li>
+            <li><span class="check-icon" style="color:var(--accent-yellow)">8</span> IAE/PCE event results slides from console data</li>
+            <li><span class="check-icon" style="color:var(--accent-yellow)">9</span> Side-by-side comparison demo: generated deck vs manual deck</li>
+            <li><span class="check-icon" style="color:var(--accent-yellow)">10</span> Basic data quality validation report</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Next Section CTA -->
+    <div class="next-section" onclick="switchTab('ai-dashboard')">
+      <div>
+        <div class="next-label">Up Next</div>
+        <div class="next-title">AI Dashboard - Real-Time Analytics</div>
+        <div class="next-desc">See the vision for replacing static Looker Studio with interactive, AI-powered dashboards</div>
+      </div>
+      <div class="next-arrow">&#8594;</div>
+    </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ================================================================== -->
+<!-- TAB 3: AI DASHBOARD - AI-Powered Analytics                          -->
+<!-- ================================================================== -->
+<div id="ai-dashboard" class="tab-content">
+  <div class="container">
+    <div class="hero">
+      <div class="badge badge-yellow">APPLICATION 2</div>
+      <h1>AI Dashboard<br><span style="color:var(--accent-yellow)">Intelligent Analytics</span></h1>
+      <p class="subtitle">Replace static Looker Studio reports with AI-powered dashboards that surface insights proactively, personalized by role - and answer questions conversationally.</p>
+    </div>
+
+    <!-- Dashboard Overview -->
+    <div class="section">
+      <h4>Overview</h4>
+      <div class="stats-row" style="margin-bottom:24px">
+        <div class="stat-card">
+          <div class="stat-value" style="color:var(--accent-blue)">13+</div>
+          <div class="stat-label">Dashboard Tabs</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" style="color:var(--accent-green)">3</div>
+          <div class="stat-label">Products Tracked</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" style="color:var(--accent-purple)">50+</div>
+          <div class="stat-label">Unique Metrics</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" style="color:var(--accent-yellow)">4</div>
+          <div class="stat-label">Data Sources</div>
+        </div>
+      </div>
+      <p>Dashboard: "Adobe - ASO KPIs" &bull; Date range: Nov 29, 2025  - Mar 6, 2026 &bull; Filters: Product, Markets (iOS/Android), Fiscal Week</p>
+    </div>
+
+    <!-- Tab by Tab -->
+    <div class="section">
+      <h4>Current Looker Studio Dashboard</h4>
+      <h2>Existing Tab Structure</h2>
+
+      <div class="accordion-item open">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <span>📊 ASO KPI Overview</span>
+          <span class="arrow">▼</span>
+        </div>
+        <div class="accordion-body">
+          <div class="accordion-body-inner">
+            <p style="margin-bottom:12px"><strong>Purpose:</strong> Top-level view of all ASO KPIs across both platforms.</p>
+            <div class="two-col" style="gap:16px">
+              <div>
+                <p style="font-size:12px;font-weight:600;color:var(--accent-blue);margin-bottom:8px">APPLE APP STORE</p>
+                <ul class="checklist">
+                  <li>Total Impressions: 342.9M (+1.2% PoP, +31.5% YoY)</li>
+                  <li>Total FTDs: 16.8M (-6.0% PoP)</li>
+                  <li>Total FTDs exc. IP: 8.6M (-0.4% PoP, -7.2% YoY)</li>
+                  <li>Search: Impressions 35.9M, FTDs 4.7M, CVR 13.1%</li>
+                  <li>Browse: Impressions 263.7M, FTDs 258K, CVR 0.1%</li>
+                  <li>Organic Search: 6.3M (-14.6% PoP)</li>
+                  <li>User Acquisition Trends chart (Search/Explore/Ads)</li>
+                </ul>
+              </div>
+              <div>
+                <p style="font-size:12px;font-weight:600;color:var(--accent-green);margin-bottom:8px">GOOGLE PLAY STORE</p>
+                <ul class="checklist">
+                  <li>Total Acquisitions: 21.9M (+0.2% PoP)</li>
+                  <li>Total SL Visitors: 84.4M (+18.3% PoP, +28.5% YoY)</li>
+                  <li>SL Total Installers: 18.0M (+2.4% PoP, +0.7% YoY)</li>
+                  <li>Total CVR: 21.3% (-13.5% PoP, -21.6% YoY)</li>
+                  <li>Search: SL Visitors 9.7M, Installers 3.8M, CVR 38.9%</li>
+                  <li>Explore: SL Visitors 23.3M, Installers 4.1M, CVR 17.5%</li>
+                  <li>User Acquisition Trends chart (Search/Browse/Referrals)</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <span>📈 ASO Uplift</span>
+          <span class="arrow">▼</span>
+        </div>
+        <div class="accordion-body">
+          <div class="accordion-body-inner">
+            <p style="margin-bottom:8px"><strong>Purpose:</strong> Track cumulative experiment uplift against quarterly targets.</p>
+            <ul class="checklist">
+              <li>ASO Targets &amp; Incremental Uplift table by fiscal quarter and product</li>
+              <li>Acrobat Reader: 778.6K uplift (FY25Q4), 417.2K (FY26Q1)</li>
+              <li>Scan: 622.6K (FY25Q4), 296.5K (FY26Q1)</li>
+              <li>New Experiment Uplift Weekly Performance bar chart (13-week rolling window)</li>
+              <li>Weekly uplift including CPP for testing</li>
+              <li>Filterable by fiscal quarter and product</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <span>🎯 Company Targets</span>
+          <span class="arrow">▼</span>
+        </div>
+        <div class="accordion-body">
+          <div class="accordion-body-inner">
+            <p><strong>Purpose:</strong> Target vs actual performance tracking by product, market, and time period. Aligns with Adobe's fiscal quarterly review cadence.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <span>🍎 ASO KPI: App Store</span>
+          <span class="arrow">▼</span>
+        </div>
+        <div class="accordion-body">
+          <div class="accordion-body-inner">
+            <p style="margin-bottom:8px"><strong>Purpose:</strong> Deep dive into iOS App Store metrics.</p>
+            <ul class="checklist">
+              <li>Detailed breakdown: Search, Browse, App Referrer, Web Referrer, Institutional Purchases</li>
+              <li>Time-series charts for each source type</li>
+              <li>Metric definitions included (from App Store Connect docs)</li>
+              <li>Filterable by market and date range</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <span>📱 ASO KPI: IAE (In-App Events)</span>
+          <span class="arrow">▼</span>
+        </div>
+        <div class="accordion-body">
+          <div class="accordion-body-inner">
+            <p><strong>Purpose:</strong> Track In-App Event performance across markets. Shows impressions, conversions, and CVR for promotional events on the App Store.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <span>▶️ ASO KPI: Play Store</span>
+          <span class="arrow">▼</span>
+        </div>
+        <div class="accordion-body">
+          <div class="accordion-body-inner">
+            <p style="margin-bottom:8px"><strong>Purpose:</strong> Deep dive into Android Google Play metrics.</p>
+            <ul class="checklist">
+              <li>Search vs Explore breakdown for store listing visitors and installers</li>
+              <li>Third-party referrals tracking</li>
+              <li>Google Play Console metric definitions included</li>
+              <li>Note: categorical searches reclassified as Explore since Feb 2023</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <span>📢 ASO KPI: PCE (Promotional Content Events)</span>
+          <span class="arrow">▼</span>
+        </div>
+        <div class="accordion-body">
+          <div class="accordion-body-inner">
+            <p><strong>Purpose:</strong> Track Promotional Content Event performance on Google Play. Shows impressions, installs, viewers by country and event type.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <span>⚠️ ANRs &amp; Crash Rates</span>
+          <span class="arrow">▼</span>
+        </div>
+        <div class="accordion-body">
+          <div class="accordion-body-inner">
+            <p><strong>Purpose:</strong> App stability metrics from Google Play Console. Important for store ranking algorithms and user retention. High ANR rates can trigger Google Play visibility penalties.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <span>🧪 Experiments (5 sub-pages)</span>
+          <span class="arrow">▼</span>
+        </div>
+        <div class="accordion-body">
+          <div class="accordion-body-inner">
+            <p style="margin-bottom:8px"><strong>Sub-pages:</strong> Summary, EXPERIMENTS: App Store, Play Store, PressPlay, WIP Creatives</p>
+            <ul class="checklist">
+              <li><strong>Summary:</strong> 57 applied on Play Store, 36 on App Store, 254 total experiments ran</li>
+              <li>Applied ratio: Play Store 22.4%, App Store 45.0%</li>
+              <li>Weekly Uplift: Play 18,888 / App Store 36,236</li>
+              <li>Weekly uplift by fiscal week broken down by product (Scan vs Acrobat Reader)</li>
+              <li>Filterable by fiscal week, fiscal quarter, country, product</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <span>🔑 Keywords Performance / KW Tracker</span>
+          <span class="arrow">▼</span>
+        </div>
+        <div class="accordion-body">
+          <div class="accordion-body-inner">
+            <p style="margin-bottom:8px"><strong>Data powered by AppTweak.</strong> Comprehensive keyword tracking.</p>
+            <ul class="checklist">
+              <li>Count of unique keywords by app/keyword group (Scan: 6 non-brand, 1 branded, 6 VIP, 14 starred)</li>
+              <li>Count by app/console (Scan: 11 Google Play + 10 iOS; Reader: 21 each)</li>
+              <li>Detailed table: app, country, original KW, translation, device, keyword group, avg volume, % change, estimated installs, % change, median rank, rank change</li>
+              <li>Filterable by device, keyword translation, time dimension, keyword group, country</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <span>📉 Category Ranking</span>
+          <span class="arrow">▼</span>
+        </div>
+        <div class="accordion-body">
+          <div class="accordion-body-inner">
+            <p><strong>Purpose:</strong> Track category position over time across markets. Important for Browse visibility and organic discovery.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <span>💾 Raw Data</span>
+          <span class="arrow">▼</span>
+        </div>
+        <div class="accordion-body">
+          <div class="accordion-body-inner">
+            <p><strong>Purpose:</strong> Underlying data tables for analysts who need to explore or verify specific data points. Useful for ad-hoc analysis and debugging.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <span>💰 Performance Marketing</span>
+          <span class="arrow">▼</span>
+        </div>
+        <div class="accordion-body">
+          <div class="accordion-body-inner">
+            <p><strong>Purpose:</strong> Paid media metrics for Apple Search Ads and Google App Campaigns. Track spend, CPC, impressions, and conversion from paid to organic.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- What Works / What Doesn't -->
+    <div class="section">
+      <h2>Audit Findings</h2>
+      <div class="two-col">
+        <div class="card" style="border-left:4px solid var(--accent-green)">
+          <h3 style="color:var(--accent-green)">What Works Well</h3>
+          <ul class="checklist">
+            <li><span class="check-icon" style="color:var(--accent-green)">✓</span> Comprehensive data coverage across iOS and Android</li>
+            <li><span class="check-icon" style="color:var(--accent-green)">✓</span> Good filter system: Product, Date Range, Markets, Fiscal Week</li>
+            <li><span class="check-icon" style="color:var(--accent-green)">✓</span> Metric definitions included for both platforms</li>
+            <li><span class="check-icon" style="color:var(--accent-green)">✓</span> Historical data enables trend analysis</li>
+            <li><span class="check-icon" style="color:var(--accent-green)">✓</span> AppTweak keyword data well-integrated</li>
+            <li><span class="check-icon" style="color:var(--accent-green)">✓</span> Experiment tracking with uplift quantification</li>
+            <li><span class="check-icon" style="color:var(--accent-green)">✓</span> Period-over-period and year-over-year comparisons throughout</li>
+          </ul>
+        </div>
+        <div class="card" style="border-left:4px solid var(--adobe-red)">
+          <h3 style="color:var(--adobe-red)">What Needs Improvement</h3>
+          <ul class="checklist">
+            <li><span class="check-icon" style="color:var(--adobe-red)">✕</span> <strong>No narrative layer</strong>  - data without "so what?"</li>
+            <li><span class="check-icon" style="color:var(--adobe-red)">✕</span> <strong>Static views</strong>  - can't drill into why a metric moved</li>
+            <li><span class="check-icon" style="color:var(--adobe-red)">✕</span> <strong>No experiment-metric correlation</strong>  - can't connect test results to KPI impact</li>
+            <li><span class="check-icon" style="color:var(--adobe-red)">✕</span> <strong>No proactive alerts</strong>  - anomalies only found when someone looks</li>
+            <li><span class="check-icon" style="color:var(--adobe-red)">✕</span> <strong>One-size-fits-all</strong>  - Susan sees same view as analyst</li>
+            <li><span class="check-icon" style="color:var(--adobe-red)">✕</span> <strong>No competitor context</strong>  - performance shown in isolation</li>
+            <li><span class="check-icon" style="color:var(--adobe-red)">✕</span> <strong>"No data" errors</strong>  - some charts show broken references (product IDs 852555131, 968433730)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recommendations -->
+    <div class="section">
+      <h2>Prioritized Recommendations</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Priority</th><th>Recommendation</th><th>Impact</th><th>Effort</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="badge badge-red" style="font-size:11px">P0</span></td>
+              <td style="font-weight:500;color:var(--text-primary)">Add AI-generated narrative summaries to each section</td>
+              <td>High  - transforms data into actionable insights</td>
+              <td>Medium</td>
+            </tr>
+            <tr>
+              <td><span class="badge badge-red" style="font-size:11px">P0</span></td>
+              <td style="font-weight:500;color:var(--text-primary)">Fix "No data" errors on App Store charts</td>
+              <td>High  - broken charts erode trust</td>
+              <td>Low</td>
+            </tr>
+            <tr>
+              <td><span class="badge badge-red" style="font-size:11px">P0</span></td>
+              <td style="font-weight:500;color:var(--text-primary)">Create executive summary tab for Susan/Nathan</td>
+              <td>High  - persona-based access</td>
+              <td>Medium</td>
+            </tr>
+            <tr>
+              <td><span class="badge badge-yellow" style="font-size:11px">P1</span></td>
+              <td style="font-weight:500;color:var(--text-primary)">Link experiments to KPI impact (before/after analysis)</td>
+              <td>High  - proves ROI of ASO work</td>
+              <td>High</td>
+            </tr>
+            <tr>
+              <td><span class="badge badge-yellow" style="font-size:11px">P1</span></td>
+              <td style="font-weight:500;color:var(--text-primary)">Add anomaly detection alerts</td>
+              <td>Medium  - catch drops faster</td>
+              <td>Medium</td>
+            </tr>
+            <tr>
+              <td><span class="badge badge-yellow" style="font-size:11px">P1</span></td>
+              <td style="font-weight:500;color:var(--text-primary)">Add competitor data alongside organic metrics</td>
+              <td>Medium  - context for keyword movements</td>
+              <td>Medium</td>
+            </tr>
+            <tr>
+              <td><span class="badge badge-blue" style="font-size:11px">P2</span></td>
+              <td style="font-weight:500;color:var(--text-primary)">Build conversational interface for ad-hoc questions</td>
+              <td>High long-term  - natural language access</td>
+              <td>High</td>
+            </tr>
+            <tr>
+              <td><span class="badge badge-blue" style="font-size:11px">P2</span></td>
+              <td style="font-weight:500;color:var(--text-primary)">Move beyond Looker to custom interactive dashboards</td>
+              <td>High long-term  - full control over UX</td>
+              <td>Very High</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <!-- ===== DASHBOARD VISION ===== -->
+    <div style="border-top:2px solid var(--border);margin:48px 0 0 0;padding-top:48px">
+
+    <!-- Core Principles from Giles -->
+    <div class="section">
+      <h4>Core Principles</h4>
+      <h2>Personalized Intelligence</h2>
+      <p style="margin-bottom:24px">Dashboards built for the average user. Your people are not average. Every interaction should be shaped by who's asking and what they care about.</p>
+
+      <div class="two-col" style="margin-bottom:32px">
+        <div class="card" style="border-top:3px solid var(--accent-green)">
+          <h3 style="color:var(--accent-green)">Proactive Mode</h3>
+          <p style="font-size:13px;margin-bottom:12px">The agent monitors your metrics and alerts you before you even think to ask.</p>
+          <ul class="checklist">
+            <li><span class="check-icon" style="color:var(--accent-green)">●</span> OKR health alerts  - off-track KRs</li>
+            <li><span class="check-icon" style="color:var(--accent-green)">●</span> Anomaly detection  - unusual metric changes</li>
+            <li><span class="check-icon" style="color:var(--accent-green)">●</span> Peer signals  - what your team is exploring</li>
+            <li><span class="check-icon" style="color:var(--accent-green)">●</span> Trend summaries  - auto-generated digests</li>
+          </ul>
+        </div>
+        <div class="card" style="border-top:3px solid var(--accent-blue)">
+          <h3 style="color:var(--accent-blue)">Reactive Mode</h3>
+          <p style="font-size:13px;margin-bottom:12px">Ask anything in natural language. The agent queries data, reasons, and responds with charts.</p>
+          <ul class="checklist">
+            <li><span class="check-icon" style="color:var(--accent-blue)">●</span> Conversational Q&amp;A with memory</li>
+            <li><span class="check-icon" style="color:var(--accent-blue)">●</span> Auto-generated charts and tables</li>
+            <li><span class="check-icon" style="color:var(--accent-blue)">●</span> Follow-up questions and drill-downs</li>
+            <li><span class="check-icon" style="color:var(--accent-blue)">●</span> Save, share, and revisit insights</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Personalization Drivers -->
+      <h3 style="margin-bottom:16px">What Shapes the Intelligence You Receive</h3>
+      <div class="card-grid card-grid-4">
+        <div class="card" style="border-left:3px solid var(--accent-green);padding:16px">
+          <div style="font-size:13px;font-weight:600;margin-bottom:4px">Role &amp; Objectives</div>
+          <p style="font-size:12px">Your title, team, focus areas, and subscribed KPIs</p>
+        </div>
+        <div class="card" style="border-left:3px solid var(--accent-blue);padding:16px">
+          <div style="font-size:13px;font-weight:600;margin-bottom:4px">Company OKRs</div>
+          <p style="font-size:12px">Department-level objectives cascade down</p>
+        </div>
+        <div class="card" style="border-left:3px solid var(--adobe-red);padding:16px">
+          <div style="font-size:13px;font-weight:600;margin-bottom:4px">Anomaly Detection</div>
+          <p style="font-size:12px">Significant week-over-week changes in key metrics</p>
+        </div>
+        <div class="card" style="border-left:3px solid var(--accent-purple);padding:16px">
+          <div style="font-size:13px;font-weight:600;margin-bottom:4px">Recency Decay</div>
+          <p style="font-size:12px">Recent signals weighted higher than older ones</p>
+        </div>
+        <div class="card" style="border-left:3px solid var(--accent-yellow);padding:16px">
+          <div style="font-size:13px;font-weight:600;margin-bottom:4px">Peer Engagement</div>
+          <p style="font-size:12px">What colleagues query  - trending topics in your team</p>
+        </div>
+        <div class="card" style="border-left:3px solid var(--phiture-teal);padding:16px">
+          <div style="font-size:13px;font-weight:600;margin-bottom:4px">Query History</div>
+          <p style="font-size:12px">Past questions and shown interests shape suggestions</p>
+        </div>
+        <div class="card" style="border-left:3px solid var(--accent-pink);padding:16px;grid-column:span 2">
+          <div style="font-size:13px;font-weight:600;margin-bottom:4px">Complexity Level</div>
+          <p style="font-size:12px">Executive gets summaries, analyst gets deep dives. All factors assembled into a context packet for every interaction.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Architecture Comparison -->
+    <div class="section">
+      <h4>Technical Architecture</h4>
+      <h2>How Context Flows Through the System</h2>
+      <p style="margin-bottom:24px">Adapted from Giles' architecture for Phiture's ASO domain and Adobe's specific needs.</p>
+      <div class="table-wrap">
+        <table class="compare-table">
+          <thead>
+            <tr><th>Component</th><th>Giles' Stack</th><th>Phiture Adaptation</th><th>Notes</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="font-weight:600;color:var(--text-primary)">Frontend</td>
+              <td>Next.js</td>
+              <td>Next.js or Streamlit</td>
+              <td>Streamlit for faster MVP, Next.js for production</td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;color:var(--text-primary)">Agent Backend</td>
+              <td>FastAPI</td>
+              <td>FastAPI + Claude API</td>
+              <td>Claude for reasoning and narrative generation</td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;color:var(--text-primary)">Semantic Layer</td>
+              <td>Cube.dev</td>
+              <td>BigQuery Views + Markdown</td>
+              <td>Fiscal week logic, metric definitions, market tiers</td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;color:var(--text-primary)">Data Warehouse</td>
+              <td>DuckDB</td>
+              <td>BigQuery (existing)</td>
+              <td>Already has console + AppTweak data</td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;color:var(--text-primary)">User Profiles</td>
+              <td>Markdown configs</td>
+              <td>Adobe role configs</td>
+              <td>Susan (exec), JJ (growth), Hugo/Sangnika (data)</td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;color:var(--text-primary)">Agent Memory</td>
+              <td>SQLite</td>
+              <td>BigQuery or Firestore</td>
+              <td>Persist conversation context, past insights</td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;color:var(--text-primary)">OKR Configs</td>
+              <td>Markdown OKRs</td>
+              <td>Adobe Q2 targets + KPIs</td>
+              <td>FTD uplift targets, CC win-back goals</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Mock Dashboards -->
+    <div class="section">
+      <h4>Mock Visualizations</h4>
+      <h2>What It Could Look Like</h2>
+
+      <!-- Mock KPI Dashboard -->
+      <div style="margin-bottom:32px">
+        <h3 style="margin-bottom:16px">Executive KPI Dashboard</h3>
+        <div class="card-grid card-grid-4" style="margin-bottom:16px">
+          <div class="metric-card">
+            <div class="metric-label">Total FTDs</div>
+            <div class="metric-value" style="color:var(--text-primary)">23.7M</div>
+            <div class="metric-change change-down">▼ 4.2% vs LY</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">iOS FTDs</div>
+            <div class="metric-value" style="color:var(--accent-blue)">5.9M</div>
+            <div class="metric-change change-down">▼ 6.0% PoP</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Android Installs</div>
+            <div class="metric-value" style="color:var(--accent-green)">17.8M</div>
+            <div class="metric-change change-up">▲ 0.2% PoP</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Experiment Uplift</div>
+            <div class="metric-value" style="color:var(--accent-purple)">714K</div>
+            <div class="metric-change" style="color:var(--accent-yellow)">76% of Q2 target</div>
+          </div>
+        </div>
+        <div class="two-col">
+          <div class="chart-container">
+            <h3 style="font-size:14px;margin-bottom:12px">Weekly FTD Trend  - All Products</h3>
+            <canvas id="ftdChart"></canvas>
+          </div>
+          <div class="chart-container">
+            <h3 style="font-size:14px;margin-bottom:12px">Experiment Uplift by Product</h3>
+            <canvas id="upliftChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mock Conversational Interface -->
+      <div style="margin-bottom:32px">
+        <h3 style="margin-bottom:16px">Conversational Analysis</h3>
+        <div class="chat-mock">
+          <div class="chat-msg">
+            <div class="chat-avatar user">JJ</div>
+            <div class="chat-bubble user-bubble">Why did iOS Reader downloads drop last week?</div>
+          </div>
+          <div class="chat-msg">
+            <div class="chat-avatar ai">AI</div>
+            <div class="chat-bubble ai-bubble">
+              <strong>Reader iOS FTDs dropped 8.8% WoW (week 202612).</strong> Three likely contributing factors:<br><br>
+              1. <strong>Paused EMEA paid media</strong>  - ASA campaigns in DE, FR, IT were paused for budget reallocation, removing ~12K weekly installs<br>
+              2. <strong>Web referral decrease</strong>  - 15% drop in web referrals, possibly linked to Adobe.com landing page changes<br>
+              3. <strong>Keyword visibility loss</strong>  - "pdf editor" dropped from #2 to #5 in US (est. -3K weekly installs), "pdf convertor" lost from #3 to #8 in DE<br><br>
+              <em>Recommendation:</em> Resume EMEA campaigns ASAP and investigate the web referral drop with the Adobe web team.
+            </div>
+          </div>
+          <div class="chat-msg">
+            <div class="chat-avatar user">JJ</div>
+            <div class="chat-bubble user-bubble">Can you show me the keyword ranking history for "pdf editor" in the US?</div>
+          </div>
+          <div class="chat-msg">
+            <div class="chat-avatar ai">AI</div>
+            <div class="chat-bubble ai-bubble">
+              Here's the ranking history for "pdf editor" (US, iOS) over the last 8 weeks. The drop from #2 to #5 coincided with a Google Docs update on March 8 that added PDF editing features, likely displacing Reader in search results.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mock Proactive Alert -->
+      <div style="margin-bottom:32px">
+        <h3 style="margin-bottom:16px">Proactive Alert Example</h3>
+        <div class="alert-card">
+          <div class="alert-header">⚠️ Anomaly Detected: Scan Android FTDs</div>
+          <div class="alert-body">
+            <strong>Scan Android first-time downloads dropped 12.3% WoW</strong> in week 202613, significantly outside the normal ±5% range.
+            <ul>
+              <li><strong>Search installs:</strong> -18% (primary driver)</li>
+              <li><strong>Explore installs:</strong> -3% (within normal range)</li>
+              <li><strong>Possible cause:</strong> Google Play algorithm update detected on Mar 12  - similar pattern seen across document scanning category</li>
+              <li><strong>Action:</strong> Check if competitors (CamScanner, Microsoft Lens) show similar drops via Sensor Tower</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Persona Views -->
+      <div>
+        <h3 style="margin-bottom:16px">Persona-Based Views</h3>
+        <div class="persona-tabs">
+          <div class="persona-tab active" onclick="switchPersona('exec')">Susan (Executive)</div>
+          <div class="persona-tab" onclick="switchPersona('growth')">JJ (Growth Lead)</div>
+          <div class="persona-tab" onclick="switchPersona('analyst')">Hugo (Analyst)</div>
+          <div class="persona-tab" onclick="switchPersona('creative')">Creative Team</div>
+        </div>
+        <div id="persona-exec" class="persona-view active">
+          <div class="card">
+            <h3>Executive Dashboard</h3>
+            <p style="font-size:13px;margin-bottom:12px">High-level KPIs, target attainment, and a 3-sentence AI-generated strategic summary. No drill-down clutter  - just the numbers that matter and what they mean.</p>
+            <div class="card-grid card-grid-3" style="margin-top:12px">
+              <div class="metric-card"><div class="metric-label">Q2 Target Attainment</div><div class="metric-value" style="color:var(--accent-green)">87%</div></div>
+              <div class="metric-card"><div class="metric-label">YoY Growth</div><div class="metric-value" style="color:var(--adobe-red)">-4.2%</div></div>
+              <div class="metric-card"><div class="metric-label">Active Experiments</div><div class="metric-value" style="color:var(--accent-purple)">12</div></div>
+            </div>
+          </div>
+        </div>
+        <div id="persona-growth" class="persona-view">
+          <div class="card">
+            <h3>Growth Lead Dashboard</h3>
+            <p style="font-size:13px;margin-bottom:12px">Experiment pipeline health, keyword opportunity map, market-by-market performance with anomaly flags. Focus on what to optimize next.</p>
+            <div class="card-grid card-grid-3" style="margin-top:12px">
+              <div class="metric-card"><div class="metric-label">Experiment Win Rate</div><div class="metric-value" style="color:var(--accent-green)">45%</div></div>
+              <div class="metric-card"><div class="metric-label">KW Opportunities</div><div class="metric-value" style="color:var(--accent-yellow)">23</div></div>
+              <div class="metric-card"><div class="metric-label">Markets w/ Anomalies</div><div class="metric-value" style="color:var(--adobe-red)">3</div></div>
+            </div>
+          </div>
+        </div>
+        <div id="persona-analyst" class="persona-view">
+          <div class="card">
+            <h3>Analyst Dashboard</h3>
+            <p style="font-size:13px;margin-bottom:12px">Raw metrics, SQL access, data quality alerts, schema browser. Full drill-down capability with exportable tables and chart builder.</p>
+            <div class="card-grid card-grid-3" style="margin-top:12px">
+              <div class="metric-card"><div class="metric-label">Tables Available</div><div class="metric-value" style="color:var(--accent-blue)">47</div></div>
+              <div class="metric-card"><div class="metric-label">Data Freshness</div><div class="metric-value" style="color:var(--accent-green)">2h</div></div>
+              <div class="metric-card"><div class="metric-label">Quality Alerts</div><div class="metric-value" style="color:var(--accent-yellow)">1</div></div>
+            </div>
+          </div>
+        </div>
+        <div id="persona-creative" class="persona-view">
+          <div class="card">
+            <h3>Creative Team Dashboard</h3>
+            <p style="font-size:13px;margin-bottom:12px">Experiment results with visual screenshots, winning vs losing concepts, next brief suggestions, and creative asset performance history.</p>
+            <div class="card-grid card-grid-3" style="margin-top:12px">
+              <div class="metric-card"><div class="metric-label">Tests This Month</div><div class="metric-value" style="color:var(--accent-purple)">8</div></div>
+              <div class="metric-card"><div class="metric-label">Winning Concepts</div><div class="metric-value" style="color:var(--accent-green)">3</div></div>
+              <div class="metric-card"><div class="metric-label">Pending Briefs</div><div class="metric-value" style="color:var(--accent-yellow)">5</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phase 2: Beyond Dashboards -->
+    <div class="section">
+      <h4>Phase 2</h4>
+      <h2>Beyond Dashboards: Interactive Companion</h2>
+      <p style="margin-bottom:20px">Once the PPTX pipeline is solid, we add a web companion that brings the deck to life.</p>
+      <div class="card-grid card-grid-3">
+        <div class="card">
+          <h3>Web Version</h3>
+          <p style="font-size:13px">Same data, but interactive. Click a chart to drill into market-level detail. Hover for AI-generated explanations. Always-current data alongside the frozen snapshot.</p>
+        </div>
+        <div class="card">
+          <h3>PPT Export</h3>
+          <p style="font-size:13px">"Download as PowerPoint" button generates the same branded PPTX from the web view. Adobe stakeholders who need a file get one. Those who prefer web get a link.</p>
+        </div>
+        <div class="card">
+          <h3>AI Companion</h3>
+          <p style="font-size:13px">Built-in chat for follow-up questions. "Why did Scan FTDs drop this week?" gets answered with data context, not just numbers. Presentations become conversations.</p>
+        </div>
+      </div>
+    </div>
+    <!-- Next Section CTA -->
+    <div class="next-section" onclick="switchTab('master-plan')">
+      <div>
+        <div class="next-label">Back to Start</div>
+        <div class="next-title">Master Plan - Architecture Overview</div>
+        <div class="next-desc">Review the three-layer architecture and overall strategy</div>
+      </div>
+      <div class="next-arrow">&#8634;</div>
+    </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ========== JAVASCRIPT ========== -->
+<script>
+  // Tab switching
+  function switchTab(tabId) {
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    document.getElementById('nav-' + tabId).classList.add('active');
+    window.scrollTo(0, 0);
+    window.location.hash = tabId;
+  }
+
+  // Load tab from URL hash
+  window.addEventListener('load', () => {
+    const hash = window.location.hash.substring(1);
+    if (hash && document.getElementById(hash)) {
+      switchTab(hash);
+    }
+  });
+
+  // Accordion toggle
+  function toggleAccordion(header) {
+    const item = header.parentElement;
+    item.classList.toggle('open');
+  }
+
+  // Persona switching
+  function switchPersona(id) {
+    document.querySelectorAll('.persona-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.persona-view').forEach(v => v.classList.remove('active'));
+    document.getElementById('persona-' + id).classList.add('active');
+    event.target.classList.add('active');
+  }
+
+  // Charts (Tab 5 mock dashboards)
+  function initCharts() {
+    const ftdCtx = document.getElementById('ftdChart');
+    if (!ftdCtx) return;
+
+    Chart.defaults.color = '#94A3B8';
+    Chart.defaults.borderColor = 'rgba(255,255,255,0.06)';
+
+    new Chart(ftdCtx, {
+      type: 'line',
+      data: {
+        labels: ['W1','W2','W3','W4','W5','W6','W7','W8','W9','W10','W11','W12','W13','W14'],
+        datasets: [{
+          label: 'FTDs CY',
+          data: [1650,1720,1580,1690,1710,1620,1740,1680,1590,1670,1700,1650,1620,1580],
+          borderColor: '#3B82F6',
+          backgroundColor: 'rgba(59,130,246,0.1)',
+          fill: true,
+          tension: 0.3
+        },{
+          label: 'FTDs LY',
+          data: [1700,1750,1690,1720,1780,1700,1750,1730,1680,1740,1760,1710,1690,1660],
+          borderColor: 'rgba(148,163,184,0.5)',
+          borderDash: [5,5],
+          fill: false,
+          tension: 0.3
+        },{
+          label: 'Target',
+          data: [1700,1700,1700,1700,1700,1700,1700,1700,1700,1700,1700,1700,1700,1700],
+          borderColor: '#E8352D',
+          borderDash: [2,4],
+          borderWidth: 2,
+          fill: false,
+          pointRadius: 0
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'bottom', labels: { boxWidth: 12, padding: 16, font: { size: 11 } } }
+        },
+        scales: {
+          y: { beginAtZero: false, ticks: { callback: v => (v/1000).toFixed(1)+'M', font: { size: 11 } }, grid: { color: 'rgba(255,255,255,0.04)' } },
+          x: { ticks: { font: { size: 11 } }, grid: { display: false } }
+        }
+      }
+    });
+
+    const upliftCtx = document.getElementById('upliftChart');
+    new Chart(upliftCtx, {
+      type: 'bar',
+      data: {
+        labels: ['W1','W2','W3','W4','W5','W6','W7','W8','W9','W10','W11','W12','W13','W14'],
+        datasets: [{
+          label: 'Scan',
+          data: [45,52,38,61,55,42,48,67,51,44,58,63,47,52],
+          backgroundColor: '#00B4AA'
+        },{
+          label: 'Acrobat Reader',
+          data: [32,28,41,35,29,38,44,31,36,42,33,29,40,35],
+          backgroundColor: '#E8352D'
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'bottom', labels: { boxWidth: 12, padding: 16, font: { size: 11 } } }
+        },
+        scales: {
+          y: { stacked: true, beginAtZero: true, ticks: { callback: v => v+'K', font: { size: 11 } }, grid: { color: 'rgba(255,255,255,0.04)' } },
+          x: { stacked: true, ticks: { font: { size: 11 } }, grid: { display: false } }
+        }
+      }
+    });
+  }
+
+  // Initialize charts when vision tab is shown
+  let chartsInitialized = false;
+  const observer = new MutationObserver(() => {
+    const visionTab = document.getElementById('ai-dashboard');
+    if (visionTab && visionTab.classList.contains('active') && !chartsInitialized) {
+      chartsInitialized = true;
+      setTimeout(initCharts, 100);
+    }
+  });
+  document.querySelectorAll('.tab-content').forEach(t => {
+    observer.observe(t, { attributes: true, attributeFilter: ['class'] });
+  });
+
+  // Also init if vision is the first tab shown (from URL hash)
+  window.addEventListener('load', () => {
+    if (document.getElementById('ai-dashboard').classList.contains('active')) {
+      setTimeout(initCharts, 200);
+    }
+  });
+</script>
+
+</body>
+</html>
